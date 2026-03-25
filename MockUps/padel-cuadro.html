@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuadro de Torneo — Pádel</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --verde: #2D6A4F;
+  --vc: #52B788;
+  --am: #F4A261;
+  --f1: #0D1B0F;
+  --f2: #162318;
+  --f3: #1E2E20;
+  --tx: #E8F5E9;
+  --ts: #8BAF8D;
+  --br: rgba(82,183,136,0.2);
+  --brf: rgba(82,183,136,0.5);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--f1);color:var(--tx);font-family:'DM Sans',sans-serif;min-height:100vh;padding-bottom:60px}
+header{background:linear-gradient(135deg,var(--f2),#0a1a0c);border-bottom:1px solid var(--brf);padding:28px 32px 24px;display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap}
+header h1{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:3px;color:var(--vc);line-height:1}
+header p{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--ts);margin-top:4px}
+.pill{background:var(--f3);border:1px solid var(--brf);border-radius:100px;padding:8px 18px;font-size:13px;color:var(--vc);font-weight:500;margin-left:auto}
+main{padding:32px 32px 0}
+.slbl{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ts);margin-bottom:12px}
+.btn-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px}
+.pbtn{background:var(--f2);border:1px solid var(--br);border-radius:8px;color:var(--ts);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;padding:8px 16px;cursor:pointer;transition:all .15s}
+.pbtn:hover{border-color:var(--vc);color:var(--tx);background:var(--f3)}
+.pbtn.on{background:var(--verde);border-color:var(--vc);color:#fff}
+.stats{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:36px}
+.sc{background:var(--f2);border:1px solid var(--br);border-radius:12px;padding:16px 22px;min-width:110px;flex:1}
+.sc .l{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ts);margin-bottom:6px}
+.sc .v{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--vc);line-height:1}
+.sc .s{font-size:12px;color:var(--ts);margin-top:3px}
+.stitle{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--ts);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.stitle::after{content:'';flex:1;height:1px;background:var(--br)}
+.zgrid{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:36px}
+.zcard{background:var(--f2);border:1px solid var(--br);border-radius:12px;padding:14px 18px;min-width:130px;flex:1}
+.znm{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--vc);letter-spacing:2px;margin-bottom:8px}
+.zp{background:var(--f3);border-left:2px solid var(--brf);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--ts);display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.zp .n{font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--vc);min-width:14px}
+.leyenda{display:flex;flex-wrap:wrap;gap:16px;padding:14px 18px;background:var(--f2);border:1px solid var(--br);border-radius:12px;margin-bottom:24px;align-items:center}
+.li{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ts)}
+.badge{padding:3px 10px;border-radius:100px;font-size:10px;font-weight:600}
+.b-bye{background:rgba(82,183,136,0.15);color:var(--vc);border:1px solid var(--vc)}
+.b-ptdo{background:rgba(244,162,97,0.15);color:var(--am);border:1px solid var(--am)}
+.b-seed{background:rgba(82,183,136,0.08);color:var(--vc);border:1px dashed var(--vc)}
+.bracket-outer{overflow-x:auto;padding-bottom:8px;margin-bottom:16px}
+.nota{font-size:11px;color:var(--ts);margin-bottom:40px;line-height:1.7}
+footer{text-align:center;padding:24px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ts);border-top:1px solid var(--br);margin-top:20px}
+@media(max-width:600px){header{padding:20px 16px}main{padding:20px 16px 0}header h1{font-size:32px}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>🎾 PÁDEL TORNEO</h1><p>Visualizador de cuadros eliminatorios</p></div>
+  <div class="pill">Sistema de gestión</div>
+</header>
+<main>
+  <div class="slbl">Seleccioná la cantidad de parejas</div>
+  <div class="btn-grid" id="btnGrid"></div>
+  <div class="stats" id="stats"></div>
+  <div class="stitle">Distribución de zonas</div>
+  <div class="zgrid" id="zonas"></div>
+  <div class="leyenda">
+    <div class="li"><span class="badge b-seed">S1</span> Siembra (1° de zona, rankeado por puntos)</div>
+    <div class="li"><span class="badge b-bye">BYE</span> Pasa directo — espera al ganador del partido de abajo</div>
+    <div class="li"><span class="badge b-ptdo">PARTIDO</span> Juega la 1ra ronda eliminatoria</div>
+  </div>
+  <div class="stitle">Cuadro eliminatorio</div>
+  <div class="bracket-outer" id="bracket"></div>
+  <p class="nota" id="nota"></p>
+</main>
+<footer>Pádel Torneo · Sistema de gestión de torneos</footer>
+
+<script>
+const L = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+function calcTorneo(n) {
+  let nZ = n<=8?2:n<=11?3:n<=16?4:n<=20?5:6;
+  if(n===18||n===19) nZ=6;
+  const base=Math.floor(n/nZ), resto=n%nZ;
+  const dist=Array.from({length:nZ},(_,i)=>i<resto?base+1:base).sort((a,b)=>b-a);
+  let pot=1; while(pot<n) pot*=2;
+  return {nZ, dist, n, pot, byes:pot-n, partidos1ra:(n-(pot-n))/2};
+}
+
+// Clasificados en orden de siembra:
+// 1°s (S1..SnZ) → 2°s → 3°s → 4°s
+// Dentro de cada grupo, rankeados de mejor a peor por puntos de zona
+function buildClasificados(t) {
+  const lista = [];
+  // 1° de zona (sembrados S1..SnZ, rankeados mejor a peor)
+  for(let z=0;z<t.nZ;z++)
+    lista.push({label:`1° Zona ${L[z]}`, pos:1, zona:z, seedNum:z+1});
+  // 2° de zona
+  for(let z=0;z<t.nZ;z++)
+    lista.push({label:`2° Zona ${L[z]}`, pos:2, zona:z, seedNum:null});
+  // 3° de zona
+  for(let z=0;z<t.nZ;z++)
+    if(t.dist[z]>=3) lista.push({label:`3° Zona ${L[z]}`, pos:3, zona:z, seedNum:null});
+  // 4° de zona
+  for(let z=0;z<t.nZ;z++)
+    if(t.dist[z]>=4) lista.push({label:`4° Zona ${L[z]}`, pos:4, zona:z, seedNum:null});
+  return lista;
+}
+
+// Patrón de siembra clásico para cuadro de `size`.
+// Devuelve array donde seedingPos[i] = posición en el cuadro del sembrado i.
+// Garantiza que los mejores sembrados estén en ramas opuestas.
+function seedingPositions(size) {
+  // Construcción recursiva:
+  // size=2: [0,1]
+  // size=4: S1→0, S2→2, S3→1, S4→3  (S1 y S2 en semis opuestas)
+  // size=8: S1→0, S2→4, S3→2, S4→6, S5→1, S6→5, S7→3, S8→7
+  if(size===1) return [0];
+  if(size===2) return [0,1];
+  const half = size/2;
+  const sub = seedingPositions(half);
+  const result = new Array(size);
+  for(let i=0;i<sub.length;i++){
+    result[i*2]   = sub[i];          // sembrado par → mitad superior
+    result[i*2+1] = sub[i] + half;   // sembrado impar → mitad inferior
+  }
+  return result;
+}
+
+// Construir los slots del cuadro de la 1ra ronda.
+// Devuelve array de `pot` elementos: cada uno es una pareja o null (BYE).
+// Los byes quedan como null en la posición compañera del sembrado con BYE.
+// Los byes se asignan a los mejores sembrados (los primeros `byes` clasificados).
+function buildSlots(t) {
+  const clasif = buildClasificados(t);
+  const pot = t.pot;
+  const byes = t.byes;
+  const sPos = seedingPositions(pot); // sPos[i] = posición en cuadro del sembrado i
+
+  // sPos[0..byes-1] son los que tienen BYE (los mejores)
+  // Su compañera en el match (posición opuesta del par) queda null
+  const byePositions = new Set();
+  for(let i=0;i<byes;i++){
+    const myPos = sPos[i];
+    const partner = myPos%2===0 ? myPos+1 : myPos-1;
+    byePositions.add(partner);
+  }
+
+  // Llenar slots: iterar en orden de siembra, saltando posiciones BYE
+  const slots = new Array(pot).fill(null);
+  let ci = 0;
+  for(let i=0;i<pot;i++){
+    const pos = sPos[i];
+    if(byePositions.has(pos)) continue; // posición reservada para BYE
+    if(ci < clasif.length) slots[pos] = clasif[ci++];
+  }
+
+  return {slots, byePositions, clasif};
+}
+
+function roundNames(pot) {
+  const all=['1ra Ronda','Octavos','Cuartos','Semis','Final'];
+  const nR = Math.log2(pot);
+  return all.slice(all.length - nR);
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function render(n) {
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.toggle('on',+b.dataset.n===n));
+  const t = calcTorneo(n);
+  const {slots, byePositions} = buildSlots(t);
+  const rounds = roundNames(t.pot);
+
+  // Stats
+  document.getElementById('stats').innerHTML=`
+    <div class="sc"><div class="l">Zonas</div><div class="v">${t.nZ}</div><div class="s">${t.dist.join(' + ')} parejas</div></div>
+    <div class="sc"><div class="l">Clasifican</div><div class="v">${t.n}</div><div class="s">Todas las parejas</div></div>
+    <div class="sc"><div class="l">Cuadro</div><div class="v">${t.pot}</div><div class="s">Posiciones</div></div>
+    <div class="sc"><div class="l">Byes</div><div class="v">${t.byes}</div><div class="s">Pasan directo</div></div>
+    <div class="sc"><div class="l">1ra Ronda</div><div class="v">${t.partidos1ra}</div><div class="s">Partidos</div></div>`;
+
+  // Zonas
+  let zh='';
+  for(let z=0;z<t.nZ;z++){
+    zh+=`<div class="zcard"><div class="znm">Zona ${L[z]}</div>`;
+    for(let p=0;p<t.dist[z];p++)
+      zh+=`<div class="zp"><span class="n">${p+1}°</span><span>Pareja ${p+1}</span></div>`;
+    zh+=`</div>`;
+  }
+  document.getElementById('zonas').innerHTML=zh;
+
+  renderBracket(t, slots, byePositions, rounds);
+
+  const hasStar = t.byes > t.nZ;
+  document.getElementById('nota').textContent = t.byes===0 ? ''
+    : hasStar
+      ? `Los byes se asignan primero a los ${t.nZ} primeros de zona (sembrados S1–S${t.nZ}), rankeados por puntos. Si quedan byes disponibles, se asignan a los mejores 2° o 3° puestos de zona. Cada sembrado con BYE pasa directo y espera al ganador del partido de la ronda inicial. Los sembrados están distribuidos en ramas opuestas para que los mejores se crucen lo más tarde posible.`
+      : `Los ${t.byes} byes se asignan a los mejores 1° de zona (sembrados S1–S${t.byes}), rankeados por puntos obtenidos en la fase de grupos. Cada sembrado con BYE pasa directo y espera al ganador del partido de abajo. Los sembrados están distribuidos en ramas opuestas para que los mejores se crucen lo más tarde posible.`;
+}
+
+function renderBracket(t, slots, byePositions, rounds) {
+  const pot=t.pot, nR=rounds.length;
+  const BW=155, BH=30, VGAP=8, HGAP=56, TOP=46, LEFT=14;
+  const matchH = BH*2+VGAP;
+  const r0matches = pot/2;
+  const MSPACING = matchH+22;
+  const totalH = TOP + r0matches*MSPACING + 30;
+  const totalW = LEFT + nR*(BW+HGAP)+20;
+
+  const C = {
+    verde:'#52B788', verdeOsc:'#2D6A4F', am:'#F4A261',
+    f2:'#162318', f3:'#1E2E20',
+    tx:'#E8F5E9', ts:'#8BAF8D',
+    br:'rgba(82,183,136,0.22)', brf:'rgba(82,183,136,0.5)'
+  };
+
+  function matchCY(r, m) {
+    if(r===0) return TOP + m*MSPACING + matchH/2;
+    return (matchCY(r-1, m*2) + matchCY(r-1, m*2+1)) / 2;
+  }
+  function mX(r){ return LEFT + r*(BW+HGAP); }
+
+  let s=`<svg width="${totalW}" height="${totalH}" viewBox="0 0 ${totalW} ${totalH}" xmlns="http://www.w3.org/2000/svg">`;
+  s+=`<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="${C.verde}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker></defs>`;
+
+  for(let r=0;r<nR;r++){
+    const matches=pot/Math.pow(2,r+1);
+    const x=mX(r);
+    s+=`<text x="${x+BW/2}" y="${TOP-14}" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="14" letter-spacing="2" fill="${C.verde}">${rounds[r].toUpperCase()}</text>`;
+    s+=`<line x1="${x}" y1="${TOP-6}" x2="${x+BW}" y2="${TOP-6}" stroke="${C.brf}" stroke-width="0.5"/>`;
+
+    for(let m=0;m<matches;m++){
+      const cy=matchCY(r,m);
+      const y1=cy-BH-VGAP/2;
+      const y2=cy+VGAP/2;
+      const isF=(r===nR-1);
+
+      if(r===0){
+        const sTop=m*2, sBot=m*2+1;
+        const pTop=slots[sTop], pBot=slots[sBot];
+        const btop=byePositions.has(sTop), bbot=byePositions.has(sBot);
+        const hasBye=btop||bbot;
+
+        if(hasBye){
+          // La pareja con BYE (la real) va arriba, abajo espera al ganador
+          const byePairing = bbot ? pTop : pBot;
+          s+=box(x,y1,BW,BH,byePairing,'bye',C);
+          s+=boxEspera(x,y2,BW,BH,C);
+        } else {
+          s+=box(x,y1,BW,BH,pTop,'partido',C);
+          s+=box(x,y2,BW,BH,pBot,'partido',C);
+        }
+      } else if(isF){
+        s+=`<rect x="${x}" y="${y1}" width="${BW}" height="${BH*2+VGAP}" rx="6" fill="${C.f3}" stroke="${C.verde}" stroke-width="1.3"/>`;
+        s+=`<text x="${x+BW/2}" y="${cy+1}" text-anchor="middle" dominant-baseline="central" font-family="'Bebas Neue',sans-serif" font-size="13" letter-spacing="2" fill="${C.verde}">🏆 CAMPEÓN</text>`;
+      } else {
+        s+=boxGanador(x,y1,BW,BH,C);
+        s+=boxGanador(x,y2,BW,BH,C);
+      }
+
+      // Conector a siguiente ronda
+      if(r<nR-1){
+        const ncy=matchCY(r+1,Math.floor(m/2));
+        const xm=x+BW+HGAP/2;
+        s+=`<path d="M${x+BW} ${cy} L${xm} ${cy} L${xm} ${ncy} L${mX(r+1)} ${ncy}" fill="none" stroke="${C.br}" stroke-width="0.8"/>`;
+        s+=`<circle cx="${x+BW}" cy="${cy}" r="2.5" fill="${C.verde}" opacity="0.35"/>`;
+      }
+    }
+  }
+  s+=`</svg>`;
+  document.getElementById('bracket').innerHTML=s;
+}
+
+function box(x,y,w,h,p,tipo,C){
+  const isBye=tipo==='bye';
+  const fill=isBye?'rgba(45,106,79,0.28)':C.f3;
+  const stroke=isBye?C.verde:C.br;
+  const sw=isBye?'1':'0.5';
+  const txFill=C.tx;
+  let s=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="5" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`;
+  if(!p){
+    s+=`<text x="${x+10}" y="${y+h/2}" dominant-baseline="central" font-family="'DM Sans',sans-serif" font-size="11" fill="${C.ts}">—</text>`;
+    return s;
+  }
+  const hasSeed=p.pos===1;
+  const lx=hasSeed?x+32:x+10;
+  if(hasSeed){
+    // Seed badge
+    s+=`<rect x="${x+5}" y="${y+5}" width="22" height="20" rx="4" fill="rgba(82,183,136,0.15)" stroke="${C.verde}" stroke-width="0.5"/>`;
+    s+=`<text x="${x+16}" y="${y+h/2}" text-anchor="middle" dominant-baseline="central" font-family="'DM Sans',sans-serif" font-size="9" font-weight="600" fill="${C.verde}">S${p.seedNum}</text>`;
+  }
+  s+=`<text x="${lx}" y="${y+h/2}" dominant-baseline="central" font-family="'DM Sans',sans-serif" font-size="11" fill="${txFill}">${p.label}</text>`;
+  if(isBye){
+    s+=`<rect x="${x+w-38}" y="${y+6}" width="34" height="18" rx="9" fill="rgba(82,183,136,0.15)" stroke="${C.verde}" stroke-width="0.5"/>`;
+    s+=`<text x="${x+w-21}" y="${y+h/2}" text-anchor="middle" dominant-baseline="central" font-family="'DM Sans',sans-serif" font-size="9" font-weight="600" fill="${C.verde}">BYE</text>`;
+  } else {
+    s+=`<rect x="${x+w-44}" y="${y+6}" width="40" height="18" rx="9" fill="rgba(244,162,97,0.12)" stroke="${C.am}" stroke-width="0.5"/>`;
+    s+=`<text x="${x+w-24}" y="${y+h/2}" text-anchor="middle" dominant-baseline="central" font-family="'DM Sans',sans-serif" font-size="9" font-weight="600" fill="${C.am}">PARTIDO</text>`;
+  }
+  return s;
+}
+
+function boxEspera(x,y,w,h,C){
+  let s=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="5" fill="${C.f2}" stroke="${C.br}" stroke-width="0.5" stroke-dasharray="4 3"/>`;
+  s+=`<text x="${x+10}" y="${y+h/2}" dominant-baseline="central" font-family="'DM Sans',sans-serif" font-size="10" fill="${C.ts}" font-style="italic">Ganador del partido ↓</text>`;
+  return s;
+}
+
+function boxGanador(x,y,w,h,C){
+  let s=`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="5" fill="${C.f2}" stroke="${C.br}" stroke-width="0.5"/>`;
+  s+=`<text x="${x+10}" y="${y+h/2}" dominant-baseline="central" font-family="'DM Sans',sans-serif" font-size="11" fill="${C.ts}">Ganador</text>`;
+  return s;
+}
+
+// Init
+const g=document.getElementById('btnGrid');
+for(let i=6;i<=24;i++){
+  const b=document.createElement('button');
+  b.className='pbtn'; b.dataset.n=i;
+  b.textContent=i+' parejas';
+  b.onclick=()=>render(i);
+  g.appendChild(b);
+}
+render(12);
+</script>
+</body>
+</html>

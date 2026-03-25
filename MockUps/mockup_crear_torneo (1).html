@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tournament Tracker — Nuevo Torneo</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --verde:#52B788;--verde-oscuro:#1A3D2B;--verde-mid:#2D6A4F;--verde-claro:#97C459;
+  --violeta:#8B5CF6;--violeta-claro:#A78BFA;
+  --fondo:#080C0A;--fondo2:#0E1612;--fondo3:#141F18;--fondo4:#1C2B21;
+  --texto:#F0F7F2;--texto2:#8BAF93;--texto3:#4A6B52;
+  --borde:rgba(82,183,136,0.12);--borde2:rgba(82,183,136,0.25);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--fondo);color:var(--texto);min-height:100vh}
+
+.topbar{background:rgba(14,22,18,0.95);border-bottom:1px solid var(--borde);padding:0 32px;height:64px;display:flex;align-items:center;gap:16px;backdrop-filter:blur(12px)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-icon{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--verde-oscuro),var(--verde-mid));border:1px solid var(--borde2);display:flex;align-items:center;justify-content:center}
+.brand-icon svg{width:20px;height:20px}
+.brand-name{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--texto);letter-spacing:-0.3px}
+.brand-name span{color:var(--verde)}
+.back-btn{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--texto3);cursor:pointer;padding:6px 12px;border-radius:6px;border:1px solid var(--borde);transition:all .2s}
+.back-btn:hover{color:var(--texto2);border-color:var(--borde2)}
+.sl-badge{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;border:1px solid rgba(139,92,246,0.2);background:rgba(139,92,246,0.06)}
+.sl-dot{width:6px;height:6px;border-radius:50%;background:var(--violeta)}
+.sl-txt{font-size:11px;color:var(--violeta-claro);font-weight:500;letter-spacing:.3px}
+
+.page-header{padding:36px 32px 0}
+.breadcrumb{font-size:12px;color:var(--texto3);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.breadcrumb span{color:var(--texto2)}
+.page-title{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--texto);margin-bottom:4px}
+.page-sub{font-size:14px;color:var(--texto3);margin-bottom:32px}
+
+.body{padding:0 32px 48px;display:grid;grid-template-columns:420px 1fr;gap:24px}
+
+/* PANEL */
+.panel{background:var(--fondo2);border:1px solid var(--borde);border-radius:16px;overflow:hidden}
+.panel-header{padding:20px 24px;border-bottom:1px solid var(--borde);display:flex;align-items:center;gap:10px}
+.panel-icon{width:28px;height:28px;border-radius:6px;background:rgba(82,183,136,0.1);border:1px solid var(--borde2);display:flex;align-items:center;justify-content:center;font-size:14px}
+.panel-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--texto)}
+.panel-body{padding:24px}
+
+/* FORM */
+.field{margin-bottom:20px}
+.field-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--texto3);font-weight:500;margin-bottom:8px;display:block}
+.field-input{
+  width:100%;padding:11px 14px;
+  background:var(--fondo3);border:1px solid var(--borde);border-radius:8px;
+  color:var(--texto);font-family:'DM Sans',sans-serif;font-size:14px;
+  transition:border-color .2s;outline:none;
+}
+.field-input:focus{border-color:var(--verde)}
+
+.opciones-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.opt{
+  padding:10px 4px;border:1px solid var(--borde);border-radius:8px;
+  text-align:center;cursor:pointer;font-size:13px;font-weight:500;
+  color:var(--texto3);background:var(--fondo3);transition:all .15s;
+  font-family:'DM Sans',sans-serif;
+}
+.opt:hover{border-color:var(--borde2);color:var(--texto2)}
+.opt.sel{border-color:var(--verde);background:rgba(82,183,136,0.1);color:var(--verde)}
+
+.opt-info{
+  margin-top:10px;padding:10px 14px;border-radius:8px;
+  background:rgba(82,183,136,0.06);border:1px solid var(--borde);
+  font-size:12px;color:var(--verde);display:flex;align-items:center;gap:6px;
+}
+.opt-info::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--verde);flex-shrink:0}
+
+.btn-primary{
+  width:100%;padding:13px;border-radius:10px;margin-top:8px;
+  background:var(--verde);color:var(--verde-oscuro);
+  font-family:'Syne',sans-serif;font-size:14px;font-weight:700;
+  border:none;cursor:pointer;letter-spacing:.5px;transition:all .2s;
+}
+.btn-primary:hover{background:var(--verde-claro);transform:translateY(-1px)}
+
+/* PAREJAS */
+.parejas-header{padding:20px 24px;border-bottom:1px solid var(--borde);display:flex;align-items:center;justify-content:space-between}
+.progress-wrap{display:flex;align-items:center;gap:10px}
+.prog-ring{position:relative;width:36px;height:36px}
+.prog-ring svg{transform:rotate(-90deg)}
+.prog-ring-txt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--verde);font-family:'Syne',sans-serif}
+.prog-label{font-size:12px;color:var(--texto3)}
+.prog-label span{color:var(--texto2);font-weight:500}
+
+.parejas-list{padding:16px 24px;display:flex;flex-direction:column;gap:8px;max-height:400px;overflow-y:auto}
+.parejas-list::-webkit-scrollbar{width:4px}
+.parejas-list::-webkit-scrollbar-track{background:transparent}
+.parejas-list::-webkit-scrollbar-thumb{background:var(--borde2);border-radius:2px}
+
+.pareja-done{
+  background:var(--fondo3);border:1px solid var(--borde);border-radius:10px;
+  padding:10px 14px;display:flex;align-items:center;justify-content:space-between;
+}
+.pareja-done-names{font-size:13px;color:var(--texto);font-weight:500}
+.pareja-done-tel{font-size:11px;color:var(--texto3);margin-top:2px}
+.pareja-check{
+  width:20px;height:20px;border-radius:50%;
+  background:rgba(82,183,136,0.12);border:1px solid rgba(82,183,136,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:var(--verde);flex-shrink:0;
+}
+
+.pareja-form{
+  border:1px solid var(--verde);border-radius:10px;
+  padding:14px;background:rgba(82,183,136,0.04);
+}
+.pareja-form-num{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--verde);font-weight:500;margin-bottom:10px}
+.pareja-form-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.pf-input{
+  width:100%;padding:8px 12px;
+  background:var(--fondo2);border:1px solid var(--borde);border-radius:6px;
+  color:var(--texto);font-family:'DM Sans',sans-serif;font-size:12px;outline:none;
+  transition:border-color .2s;
+}
+.pf-input:focus{border-color:var(--borde2)}
+.pf-input::placeholder{color:var(--texto3)}
+
+.add-btn{
+  width:100%;padding:10px;margin-top:8px;
+  border:1px dashed var(--borde2);border-radius:8px;
+  background:transparent;color:var(--texto3);font-family:'DM Sans',sans-serif;font-size:13px;
+  cursor:pointer;transition:all .2s;
+}
+.add-btn:hover{border-color:var(--verde);color:var(--verde);background:rgba(82,183,136,0.04)}
+
+.faltan-aviso{
+  margin:0 24px 16px;padding:12px 16px;border-radius:8px;
+  background:rgba(82,183,136,0.06);border:1px solid var(--borde);
+  font-size:12px;color:var(--texto2);line-height:1.5;
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.panel{animation:fadeUp .35s ease both}
+.panel:nth-child(2){animation-delay:.1s}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="4" width="6" height="4" rx="1.5" fill="#52B788"/>
+        <rect x="2" y="12" width="6" height="4" rx="1.5" fill="#52B788"/>
+        <line x1="8" y1="6" x2="12" y2="6" stroke="#52B788" stroke-width="1.2"/>
+        <line x1="8" y1="14" x2="12" y2="14" stroke="#52B788" stroke-width="1.2"/>
+        <line x1="12" y1="6" x2="12" y2="14" stroke="#52B788" stroke-width="1.2"/>
+        <line x1="12" y1="10" x2="15" y2="10" stroke="#97C459" stroke-width="1.2"/>
+        <rect x="15" y="8" width="3" height="4" rx="1" fill="#97C459"/>
+      </svg>
+    </div>
+    <div class="brand-name">Tournament <span>Tracker</span></div>
+  </div>
+  <div class="back-btn">← Volver al inicio</div>
+  <div class="sl-badge" style="margin-left:12px">
+    <div class="sl-dot"></div>
+    <span class="sl-txt">Simple Line Solutions</span>
+  </div>
+</div>
+
+<div class="page-header">
+  <div class="breadcrumb">Inicio <span>›</span> Nuevo torneo</div>
+  <div class="page-title">Crear torneo</div>
+  <div class="page-sub">Configurá los datos del torneo y cargá las parejas participantes</div>
+</div>
+
+<div class="body">
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-icon">🏆</div>
+      <div class="panel-title">Datos del torneo</div>
+    </div>
+    <div class="panel-body">
+      <div class="field">
+        <label class="field-label">Nombre del torneo</label>
+        <input type="text" class="field-input" value="Copa Verano 2025" />
+      </div>
+      <div class="field">
+        <label class="field-label">Cantidad de parejas</label>
+        <div class="opciones-grid">
+          <div class="opt">6</div><div class="opt">7</div><div class="opt">8</div><div class="opt">9</div><div class="opt">10</div>
+          <div class="opt">11</div><div class="opt">12</div><div class="opt">13</div><div class="opt">14</div><div class="opt">15</div>
+          <div class="opt sel">16</div><div class="opt">17</div><div class="opt">18</div><div class="opt">19</div><div class="opt">20</div>
+          <div class="opt">21</div><div class="opt">22</div><div class="opt">23</div><div class="opt">24</div>
+        </div>
+        <div class="opt-info">16 parejas → 4 zonas de 4 · Cuadro de 16</div>
+      </div>
+      <button class="btn-primary">Crear torneo y cargar parejas →</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="parejas-header">
+      <div>
+        <div class="panel-title" style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--texto)">Carga de parejas</div>
+        <div style="font-size:12px;color:var(--texto3);margin-top:2px">Copa Verano 2025</div>
+      </div>
+      <div class="progress-wrap">
+        <div class="prog-ring">
+          <svg width="36" height="36" viewBox="0 0 36 36">
+            <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(82,183,136,0.1)" stroke-width="3"/>
+            <circle cx="18" cy="18" r="14" fill="none" stroke="#52B788" stroke-width="3" stroke-dasharray="87.96" stroke-dashoffset="60.6" stroke-linecap="round"/>
+          </svg>
+          <div class="prog-ring-txt">5/16</div>
+        </div>
+        <div class="prog-label"><span>5</span> de <span>16</span> cargadas</div>
+      </div>
+    </div>
+    <div class="parejas-list">
+      <div class="pareja-done">
+        <div><div class="pareja-done-names">García M. / López R.</div><div class="pareja-done-tel">+54 911 2345 6789</div></div>
+        <div class="pareja-check">✓</div>
+      </div>
+      <div class="pareja-done">
+        <div><div class="pareja-done-names">Martínez J. / Rodríguez P.</div><div class="pareja-done-tel">+54 911 3456 7890</div></div>
+        <div class="pareja-check">✓</div>
+      </div>
+      <div class="pareja-done">
+        <div><div class="pareja-done-names">González A. / Fernández C.</div><div class="pareja-done-tel">+54 911 4567 8901</div></div>
+        <div class="pareja-check">✓</div>
+      </div>
+      <div class="pareja-form">
+        <div class="pareja-form-num">Pareja 4</div>
+        <div class="pareja-form-fields">
+          <input class="pf-input" placeholder="Nombre y apellido J1" />
+          <input class="pf-input" placeholder="Nombre y apellido J2" />
+        </div>
+        <input class="pf-input" style="width:100%" placeholder="Teléfono WhatsApp (ej: +54 911...)" />
+      </div>
+      <button class="add-btn">+ Agregar siguiente pareja</button>
+    </div>
+    <div class="faltan-aviso">
+      Faltan <strong>12 parejas</strong>. Las zonas y cruces se generarán automáticamente al completar las 16.
+    </div>
+  </div>
+</div>
+</body>
+</html>

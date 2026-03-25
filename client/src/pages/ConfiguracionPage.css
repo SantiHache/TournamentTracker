@@ -1,0 +1,275 @@
+.config-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.config-header-title {
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.config-header-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.config-nav-switch {
+  display: inline-flex;
+  border: 1px solid rgb(226 232 240);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.config-nav-link {
+  padding: 0.45rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgb(71 85 105);
+  background: rgb(255 255 255);
+}
+
+.config-nav-link-active {
+  color: rgb(255 255 255);
+  background: rgb(99 102 241);
+}
+
+.config-header-subtitle {
+  margin-top: 0.5rem;
+  color: rgb(71 85 105);
+}
+
+.config-section-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.config-tournament-row {
+  margin-top: 0.75rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  align-items: end;
+}
+
+.config-tournament-status {
+  width: fit-content;
+  height: fit-content;
+  border-radius: 9999px;
+  background: rgb(241 245 249);
+  color: rgb(51 65 85);
+  font-size: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.config-field-label {
+  font-size: 0.75rem;
+  color: rgb(100 116 139);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.config-section-hint {
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  color: rgb(100 116 139);
+}
+
+.config-method-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.config-method-card {
+  border: 1px solid rgb(226 232 240);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 0.75rem;
+  background: rgb(255 255 255);
+}
+
+.config-method-name {
+  font-weight: 600;
+  color: rgb(30 41 59);
+}
+
+.config-method-description {
+  margin-top: 0.2rem;
+  font-size: 0.75rem;
+  color: rgb(71 85 105);
+}
+
+.config-method-inactive {
+  margin-top: 0.3rem;
+  font-size: 0.7rem;
+  color: rgb(180 83 9);
+}
+
+.config-method-actions {
+  margin-top: 0.9rem;
+}
+
+.config-court-form {
+  margin-top: 0.75rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+}
+
+.config-courts-grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.config-court-card {
+  border: 1px solid rgb(226 232 240);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  background: rgb(255 255 255);
+  transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.config-court-card:hover {
+  background: rgb(240 253 244);
+  border-color: rgb(134 239 172);
+  transform: translateY(-1px);
+}
+
+.config-court-name {
+  font-weight: 600;
+  color: rgb(30 41 59);
+}
+
+.config-court-description {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: rgb(71 85 105);
+}
+
+.config-court-id {
+  margin-top: 0.5rem;
+  display: inline-block;
+  font-size: 0.6875rem;
+  color: rgb(100 116 139);
+}
+
+.config-court-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.config-court-actions {
+  margin-top: 0.625rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.config-court-btn {
+  border: 1px solid rgb(203 213 225);
+  border-radius: 0.5rem;
+  background: rgb(255 255 255);
+  color: rgb(30 41 59);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.35rem 0.6rem;
+  cursor: pointer;
+}
+
+.config-court-btn:hover {
+  background: rgb(248 250 252);
+}
+
+.config-court-btn-primary {
+  background: rgb(22 163 74);
+  border-color: rgb(22 163 74);
+  color: rgb(255 255 255);
+}
+
+.config-court-btn-primary:hover {
+  background: rgb(21 128 61);
+}
+
+.config-empty-state {
+  font-size: 0.875rem;
+  color: rgb(100 116 139);
+  grid-column: 1 / -1;
+}
+
+.config-toast-stack {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.config-toast {
+  min-width: 250px;
+  max-width: 360px;
+  border-radius: 0.75rem;
+  border: 1px solid transparent;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.18);
+  padding: 0.65rem 0.85rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgb(15 23 42);
+  background: rgb(255 255 255);
+}
+
+.config-toast-success {
+  border-color: rgb(134 239 172);
+  background: rgb(240 253 244);
+}
+
+.config-toast-error {
+  border-color: rgb(252 165 165);
+  background: rgb(254 242 242);
+}
+
+@media (min-width: 768px) {
+  .config-tournament-row {
+    grid-template-columns: 1fr auto;
+  }
+
+  .config-court-form {
+    grid-template-columns: 1fr 1fr auto;
+  }
+
+  .config-courts-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .config-method-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .config-courts-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .config-courts-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .config-method-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

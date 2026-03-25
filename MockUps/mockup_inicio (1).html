@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tournament Tracker — Inicio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --verde: #52B788;
+  --verde-oscuro: #1A3D2B;
+  --verde-mid: #2D6A4F;
+  --verde-claro: #97C459;
+  --violeta: #8B5CF6;
+  --violeta-claro: #A78BFA;
+  --fondo: #080C0A;
+  --fondo2: #0E1612;
+  --fondo3: #141F18;
+  --fondo4: #1C2B21;
+  --texto: #F0F7F2;
+  --texto2: #8BAF93;
+  --texto3: #4A6B52;
+  --borde: rgba(82,183,136,0.12);
+  --borde2: rgba(82,183,136,0.25);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--fondo);color:var(--texto);min-height:100vh}
+
+/* TOPBAR */
+.topbar{
+  background:rgba(14,22,18,0.95);
+  border-bottom:1px solid var(--borde);
+  padding:0 32px;
+  height:64px;
+  display:flex;align-items:center;gap:16px;
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(12px);
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-icon{
+  width:36px;height:36px;border-radius:8px;
+  background:linear-gradient(135deg,var(--verde-oscuro),var(--verde-mid));
+  border:1px solid var(--borde2);
+  display:flex;align-items:center;justify-content:center;
+}
+.brand-icon svg{width:20px;height:20px}
+.brand-name{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--texto);letter-spacing:-0.3px}
+.brand-name span{color:var(--verde)}
+
+.nav-torneos{display:flex;gap:4px;margin-left:24px}
+.nav-pill{
+  padding:6px 14px;border-radius:100px;font-size:13px;color:var(--texto2);
+  cursor:pointer;transition:all .2s;border:1px solid transparent;
+  font-family:'DM Sans',sans-serif;
+}
+.nav-pill:hover{background:var(--fondo3);color:var(--texto)}
+.nav-pill.act{background:var(--fondo4);color:var(--verde);border-color:var(--borde2)}
+
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.sl-badge{
+  display:flex;align-items:center;gap:6px;
+  padding:5px 10px;border-radius:6px;
+  border:1px solid rgba(139,92,246,0.2);
+  background:rgba(139,92,246,0.06);
+}
+.sl-dot{width:6px;height:6px;border-radius:50%;background:var(--violeta)}
+.sl-txt{font-size:11px;color:var(--violeta-claro);font-weight:500;letter-spacing:.3px}
+
+.btn-nuevo{
+  padding:9px 20px;border-radius:8px;
+  background:var(--verde);color:var(--verde-oscuro);
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
+  border:none;cursor:pointer;letter-spacing:.3px;
+  transition:all .2s;
+}
+.btn-nuevo:hover{background:var(--verde-claro);transform:translateY(-1px)}
+
+/* HERO */
+.hero{
+  padding:48px 32px 32px;
+  border-bottom:1px solid var(--borde);
+  background:
+    radial-gradient(ellipse 600px 300px at 20% 50%, rgba(45,106,79,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 400px 200px at 80% 50%, rgba(139,92,246,0.05) 0%, transparent 70%);
+}
+.hero-label{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 12px;border-radius:100px;
+  background:rgba(82,183,136,0.08);border:1px solid var(--borde2);
+  font-size:11px;color:var(--verde);letter-spacing:1px;text-transform:uppercase;
+  font-weight:500;margin-bottom:16px;
+}
+.hero-label::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--verde-claro)}
+.hero-title{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:var(--texto);line-height:1.1;margin-bottom:8px}
+.hero-sub{font-size:14px;color:var(--texto2);line-height:1.6}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--borde);border-radius:12px;overflow:hidden;margin:32px}
+.stat{
+  background:var(--fondo2);padding:20px 24px;
+  transition:background .2s;
+}
+.stat:hover{background:var(--fondo3)}
+.stat-l{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--texto3);margin-bottom:8px;font-weight:500}
+.stat-v{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;color:var(--texto);line-height:1}
+.stat-v.verde{color:var(--verde)}
+.stat-s{font-size:12px;color:var(--texto3);margin-top:4px}
+
+/* BODY */
+.body{padding:0 32px 48px}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.section-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--texto3)}
+.section-line{flex:1;height:1px;background:var(--borde)}
+
+/* CARDS */
+.torneo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px}
+.tcard{
+  background:var(--fondo2);border:1px solid var(--borde);border-radius:16px;
+  padding:20px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;
+}
+.tcard::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--verde-mid),transparent);
+  opacity:0;transition:opacity .25s;
+}
+.tcard:hover{border-color:var(--borde2);background:var(--fondo3);transform:translateY(-2px)}
+.tcard:hover::before{opacity:1}
+
+.tcard-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+.tcard-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--texto);margin-bottom:3px}
+.tcard-date{font-size:11px;color:var(--texto3)}
+.badge{padding:4px 10px;border-radius:100px;font-size:11px;font-weight:500;letter-spacing:.3px}
+.badge-act{background:rgba(82,183,136,0.12);color:var(--verde);border:1px solid rgba(82,183,136,0.25)}
+.badge-fin{background:var(--fondo3);color:var(--texto3);border:1px solid var(--borde)}
+
+.tcard-stats{display:flex;gap:20px;margin-bottom:16px}
+.tcs{font-size:12px;color:var(--texto3)}
+.tcs span{color:var(--texto);font-weight:500}
+
+.tcard-fase{font-size:12px;color:var(--texto3);margin-bottom:8px}
+.fase-bar{height:3px;background:var(--fondo4);border-radius:2px;overflow:hidden}
+.fase-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--verde-mid),var(--verde))}
+.fase-fill.done{background:linear-gradient(90deg,var(--verde-claro),var(--verde))}
+
+.tcard-new{
+  border:1px dashed var(--borde2);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;min-height:140px;
+  background:rgba(82,183,136,0.02);
+}
+.tcard-new:hover{background:rgba(82,183,136,0.05);border-color:var(--verde)}
+.tcard-new-icon{
+  width:36px;height:36px;border-radius:8px;
+  background:rgba(82,183,136,0.1);border:1px solid var(--borde2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;color:var(--verde);font-weight:300;
+}
+.tcard-new-txt{font-size:13px;color:var(--texto2)}
+
+/* FOOTER */
+.footer{
+  margin:0 32px;padding:16px 0;border-top:1px solid var(--borde);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.footer-txt{font-size:11px;color:var(--texto3)}
+.footer-sl{font-size:11px;color:var(--violeta-claro);display:flex;align-items:center;gap:5px}
+.footer-sl::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--violeta)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.hero{animation:fadeUp .4s ease}
+.stats{animation:fadeUp .4s ease .1s both}
+.tcard{animation:fadeUp .4s ease both}
+.tcard:nth-child(1){animation-delay:.15s}
+.tcard:nth-child(2){animation-delay:.2s}
+.tcard:nth-child(3){animation-delay:.25s}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="4" width="6" height="4" rx="1.5" fill="#52B788"/>
+        <rect x="2" y="12" width="6" height="4" rx="1.5" fill="#52B788"/>
+        <line x1="8" y1="6" x2="12" y2="6" stroke="#52B788" stroke-width="1.2"/>
+        <line x1="8" y1="14" x2="12" y2="14" stroke="#52B788" stroke-width="1.2"/>
+        <line x1="12" y1="6" x2="12" y2="14" stroke="#52B788" stroke-width="1.2"/>
+        <line x1="12" y1="10" x2="15" y2="10" stroke="#97C459" stroke-width="1.2"/>
+        <rect x="15" y="8" width="3" height="4" rx="1" fill="#97C459"/>
+      </svg>
+    </div>
+    <div class="brand-name">Tournament <span>Tracker</span></div>
+  </div>
+  <div class="nav-torneos">
+    <div class="nav-pill act">Copa Verano 2025</div>
+    <div class="nav-pill">Copa Invierno</div>
+    <div class="nav-pill">Torneo Empresas</div>
+  </div>
+  <div class="topbar-right">
+    <div class="sl-badge">
+      <div class="sl-dot"></div>
+      <span class="sl-txt">Simple Line Solutions</span>
+    </div>
+    <button class="btn-nuevo">+ Nuevo torneo</button>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-label">En vivo</div>
+  <div class="hero-title">Torneos del día</div>
+  <div class="hero-sub">Domingo 15 de diciembre, 2024 — 3 torneos activos</div>
+</div>
+
+<div class="stats">
+  <div class="stat">
+    <div class="stat-l">Torneos hoy</div>
+    <div class="stat-v">3</div>
+    <div class="stat-s">+1 respecto a ayer</div>
+  </div>
+  <div class="stat">
+    <div class="stat-l">En curso</div>
+    <div class="stat-v verde">2</div>
+    <div class="stat-s">Fase de zonas</div>
+  </div>
+  <div class="stat">
+    <div class="stat-l">Finalizados</div>
+    <div class="stat-v">1</div>
+    <div class="stat-s">Hoy</div>
+  </div>
+  <div class="stat">
+    <div class="stat-l">Total parejas</div>
+    <div class="stat-v">44</div>
+    <div class="stat-s">En todos los torneos</div>
+  </div>
+</div>
+
+<div class="body">
+  <div class="section-header">
+    <div class="section-title">Torneos activos</div>
+    <div class="section-line"></div>
+  </div>
+  <div class="torneo-grid">
+    <div class="tcard">
+      <div class="tcard-head">
+        <div>
+          <div class="tcard-name">Copa Verano 2025</div>
+          <div class="tcard-date">Creado hoy, 08:30 hs</div>
+        </div>
+        <span class="badge badge-act">Activo</span>
+      </div>
+      <div class="tcard-stats">
+        <div class="tcs"><span>16</span> parejas</div>
+        <div class="tcs"><span>4</span> zonas</div>
+      </div>
+      <div class="tcard-fase">Zonas — 8 de 12 partidos jugados</div>
+      <div class="fase-bar"><div class="fase-fill" style="width:66%"></div></div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-head">
+        <div>
+          <div class="tcard-name">Copa Invierno</div>
+          <div class="tcard-date">Creado hoy, 09:15 hs</div>
+        </div>
+        <span class="badge badge-act">Activo</span>
+      </div>
+      <div class="tcard-stats">
+        <div class="tcs"><span>12</span> parejas</div>
+        <div class="tcs"><span>4</span> zonas</div>
+      </div>
+      <div class="tcard-fase">Octavos — 2 de 4 partidos jugados</div>
+      <div class="fase-bar"><div class="fase-fill" style="width:50%"></div></div>
+    </div>
+    <div class="tcard tcard-new">
+      <div class="tcard-new-icon">+</div>
+      <div class="tcard-new-txt">Crear nuevo torneo</div>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-title">Finalizados</div>
+    <div class="section-line"></div>
+  </div>
+  <div class="torneo-grid">
+    <div class="tcard">
+      <div class="tcard-head">
+        <div>
+          <div class="tcard-name">Torneo Empresas</div>
+          <div class="tcard-date">Finalizado hoy, 13:45 hs</div>
+        </div>
+        <span class="badge badge-fin">Finalizado</span>
+      </div>
+      <div class="tcard-stats">
+        <div class="tcs"><span>16</span> parejas</div>
+        <div class="tcs">Campeón: <span>García / López</span></div>
+      </div>
+      <div class="tcard-fase">Duración total: 5 horas 15 min</div>
+      <div class="fase-bar"><div class="fase-fill done" style="width:100%"></div></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-txt">Tournament Tracker v1.0 — Sistema de gestión de torneos de pádel</div>
+    <div class="footer-sl">Simple Line Solutions</div>
+  </div>
+</div>
+
+</body>
+</html>

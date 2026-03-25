@@ -1,0 +1,104 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.app{background:var(--color-background-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;border:0.5px solid var(--color-border-tertiary)}
+.topbar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:0 28px;display:flex;align-items:center;height:56px;gap:12px}
+.logo{font-size:15px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:8px}
+.logo-dot{width:10px;height:10px;border-radius:50%;background:#3B6D11}
+.torneo-sel{margin-left:16px;padding:5px 12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary);font-size:13px}
+.tabs{display:flex;gap:2px;margin-left:auto}
+.tab{padding:6px 16px;border-radius:var(--border-radius-md);font-size:13px;color:var(--color-text-secondary);cursor:pointer}
+.tab.act{background:var(--color-background-secondary);color:var(--color-text-primary);font-weight:500}
+.body{padding:24px 28px;overflow-x:auto}
+.bracket{display:flex;gap:0;align-items:flex-start}
+.round{display:flex;flex-direction:column;min-width:180px}
+.round-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--color-text-secondary);padding:0 0 10px 8px}
+.round-matches{display:flex;flex-direction:column;gap:0}
+.match-wrap{display:flex;align-items:center}
+.match{flex:1}
+.mbox{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);margin:3px 8px;padding:7px 10px;background:var(--color-background-primary);cursor:pointer;min-width:160px}
+.mbox:hover{border-color:var(--color-border-secondary)}
+.mbox.win{background:#EAF3DE;border-color:#97C459}
+.mbox.bye{background:var(--color-background-secondary);border-style:dashed}
+.mbox.pending{border-color:#3B6D11}
+.mbox-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+.mbox-name{font-size:12px;color:var(--color-text-primary)}
+.mbox-name.lose{color:var(--color-text-secondary)}
+.mbox-score{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.mbox-score.win{color:#3B6D11}
+.mbox-score.lose{color:var(--color-text-secondary)}
+.mbox-divider{height:0.5px;background:var(--color-border-tertiary);margin:4px 0}
+.seed-badge{display:inline-block;width:18px;height:18px;border-radius:4px;background:#EAF3DE;border:0.5px solid #3B6D11;font-size:9px;color:#27500A;font-weight:500;text-align:center;line-height:18px;margin-right:5px;flex-shrink:0}
+.bye-label{font-size:11px;color:var(--color-text-secondary);font-style:italic}
+.conn{width:20px;display:flex;align-items:center;justify-content:center}
+.conn-line{width:12px;height:0.5px;background:var(--color-border-secondary)}
+.cargar-mini{font-size:10px;padding:3px 8px;border:0.5px solid #3B6D11;border-radius:100px;color:#3B6D11;background:#EAF3DE;cursor:pointer;white-space:nowrap;margin-right:4px}
+.final-box{background:var(--color-background-primary);border:1.5px solid #3B6D11;border-radius:var(--border-radius-lg);padding:16px 18px;margin:8px;text-align:center}
+.final-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#3B6D11;margin-bottom:10px}
+.final-name{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.final-vs{font-size:12px;color:var(--color-text-secondary);margin:6px 0}
+.cargar-final{width:100%;padding:8px;border-radius:var(--border-radius-md);background:#3B6D11;color:#EAF3DE;font-size:13px;font-weight:500;border:none;cursor:pointer;margin-top:10px}
+</style>
+<div class="app">
+  <div class="topbar">
+    <div class="logo"><div class="logo-dot"></div>Pádel Torneo</div>
+    <select class="torneo-sel"><option>Copa Verano 2025 — 12 parejas</option></select>
+    <div class="tabs">
+      <div class="tab">Parejas</div>
+      <div class="tab">Zonas</div>
+      <div class="tab act">Eliminatorias</div>
+      <div class="tab">Final</div>
+    </div>
+  </div>
+  <div class="body">
+    <div class="bracket">
+      <div class="round">
+        <div class="round-title">Octavos</div>
+        <div class="round-matches">
+          <div class="mbox bye"><div class="mbox-top"><span class="bye-label">— bye —</span></div></div>
+          <div class="mbox win"><div class="mbox-top"><span class="mbox-name"><span class="seed-badge">S1</span>Sánchez / Ruiz</span><span class="mbox-score win">6 6</span></div></div>
+          <div style="height:16px"></div>
+          <div class="mbox"><div class="mbox-top"><span class="mbox-name">Torres / Díaz</span><span class="mbox-score lose">4 3</span></div></div>
+          <div class="mbox win"><div class="mbox-top"><span class="mbox-name"><span class="seed-badge">S2</span>Vargas / Castro</span><span class="mbox-score win">7 6</span></div></div>
+          <div style="height:16px"></div>
+          <div class="mbox pending"><div class="mbox-top"><span class="mbox-name"><span class="seed-badge">S3</span>Morales / Vega</span><div class="cargar-mini">Cargar</div></div><div class="mbox-divider"></div><div class="mbox-top"><span class="mbox-name">Pérez / Silva</span></div></div>
+          <div style="height:16px"></div>
+          <div class="mbox"><div class="mbox-top"><span class="mbox-name">González / Ramos</span></div><div class="mbox-divider"></div><div class="mbox-top"><span class="mbox-name">Fernández / López</span></div><div class="mbox-top" style="margin-top:4px"><div class="cargar-mini">Cargar</div></div></div>
+        </div>
+      </div>
+      <div class="round">
+        <div class="round-title">Cuartos</div>
+        <div class="round-matches">
+          <div style="height:12px"></div>
+          <div class="mbox win"><div class="mbox-top"><span class="mbox-name"><span class="seed-badge">S1</span>Sánchez / Ruiz</span><span class="mbox-score win">6 7</span></div><div class="mbox-divider"></div><div class="mbox-top"><span class="mbox-name lose">Vargas / Castro</span><span class="mbox-score lose">3 5</span></div></div>
+          <div style="height:32px"></div>
+          <div class="mbox pending"><div class="mbox-top"><span class="mbox-name"><span class="seed-badge">S2</span>Vargas / Castro</span><div class="cargar-mini">Cargar</div></div><div class="mbox-divider"></div><div class="mbox-top"><span class="mbox-name">Ganador oct. 3</span></div></div>
+          <div style="height:32px"></div>
+          <div class="mbox bye"><div class="mbox-top"><span class="bye-label">Esperando resultados</span></div></div>
+        </div>
+      </div>
+      <div class="round">
+        <div class="round-title">Semis</div>
+        <div class="round-matches">
+          <div style="height:28px"></div>
+          <div class="mbox pending"><div class="mbox-top"><span class="mbox-name"><span class="seed-badge">S1</span>Sánchez / Ruiz</span><div class="cargar-mini">Cargar</div></div><div class="mbox-divider"></div><div class="mbox-top"><span class="mbox-name">Ganador C2</span></div></div>
+          <div style="height:48px"></div>
+          <div class="mbox bye"><div class="mbox-top"><span class="bye-label">Esperando resultados</span></div></div>
+        </div>
+      </div>
+      <div class="round">
+        <div class="round-title">Final</div>
+        <div class="round-matches">
+          <div style="height:42px"></div>
+          <div class="final-box">
+            <div class="final-title">Gran Final</div>
+            <div class="final-name">Sánchez / Ruiz</div>
+            <div class="final-vs">vs</div>
+            <div class="final-name">Por definir</div>
+            <button class="cargar-final" disabled style="opacity:.4;cursor:default">Cargar resultado final</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

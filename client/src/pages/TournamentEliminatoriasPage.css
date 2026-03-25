@@ -1,0 +1,176 @@
+.eliminatorias-bracket-scroll {
+  max-height: min(72vh, 920px);
+  overflow-x: auto;
+  overflow-y: auto;
+  padding-right: 6px;
+  padding-bottom: 4px;
+}
+
+.eliminatorias-bracket-surface {
+  overflow: hidden;
+}
+
+.eliminatoria-match-node {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 8px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+.eliminatoria-match-meta {
+  margin: 0 0 6px 0;
+  font-size: 10px;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #475569;
+  font-weight: 700;
+}
+
+.eliminatoria-match-headline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.eliminatoria-court-select {
+  height: 26px;
+  min-width: 88px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #334155;
+  font-size: 11px;
+  padding: 0 8px;
+}
+
+.eliminatoria-start-btn {
+  height: 26px;
+  border-radius: 999px;
+  border: 1px solid #059669;
+  color: #059669;
+  background: #fff;
+  padding: 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.eliminatoria-start-btn:disabled {
+  opacity: 0.45;
+}
+
+.eliminatoria-status-pill {
+  border-radius: 999px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #475569;
+  padding: 2px 8px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.eliminatoria-score-table {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.eliminatoria-score-head,
+.eliminatoria-score-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) repeat(3, 26px);
+  gap: 6px;
+  align-items: center;
+}
+
+.eliminatoria-score-head {
+  color: #94a3b8;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.eliminatoria-score-head-player {
+  padding-left: 2px;
+}
+
+.eliminatoria-score-head-set {
+  text-align: center;
+}
+
+.eliminatoria-player-label {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.15;
+  overflow: hidden;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.eliminatoria-bye-players {
+  display: grid;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.eliminatoria-bye-vs {
+  margin: 0;
+  font-size: 10px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.eliminatoria-score-input {
+  width: 26px;
+  height: 24px;
+  border-radius: 6px;
+  border: 1px solid rgba(124, 58, 237, 0.4);
+  text-align: center;
+  font-size: 11px;
+}
+
+.eliminatoria-score-box {
+  display: inline-flex;
+  width: 26px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 11px;
+}
+
+.eliminatoria-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.eliminatoria-finish-btn {
+  border-radius: 999px;
+  border: 0;
+  background: #059669;
+  color: #fff;
+  height: 24px;
+  padding: 0 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.eliminatoria-wo-btn {
+  border-radius: 8px;
+  border: 1px solid #fcd34d;
+  background: #fef3c7;
+  color: #92400e;
+  height: 24px;
+  padding: 0 8px;
+  font-size: 10px;
+  font-weight: 600;
+}

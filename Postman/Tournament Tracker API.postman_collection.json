@@ -1,0 +1,440 @@
+{
+  "info": {
+    "_postman_id": "b9a24717-9a2a-4dc4-9fb8-7e6fb316c2d9",
+    "name": "Tournament Tracker API",
+    "description": "Coleccion para probar endpoints principales y funciones SuperAdmin.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "00 - Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "01 - Auth",
+      "item": [
+        {
+          "name": "Login (set token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set('token', jsonData.token || '');",
+                  "pm.collectionVariables.set('userRole', (jsonData.user && jsonData.user.role) ? jsonData.user.role : '');"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cambiar contraseña (propia)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "var d = pm.response.json();",
+                  "if (d.token) pm.collectionVariables.set('token', d.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"S1mpl3L1n3\",\n  \"newPassword\": \"NuevaPass123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/change-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "change-password"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 - Torneos",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{token}}",
+            "type": "string"
+          }
+        ]
+      },
+      "item": [
+        {
+          "name": "Listar torneos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/torneos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "torneos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Detalle torneo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/torneos/{{tournamentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "torneos",
+                "{{tournamentId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Partidos del torneo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/torneos/{{tournamentId}}/partidos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "torneos",
+                "{{tournamentId}}",
+                "partidos"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03 - SuperAdmin",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{token}}",
+            "type": "string"
+          }
+        ]
+      },
+      "item": [
+        {
+          "name": "Auditoria",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/superadmin/auditoria?page=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "superadmin",
+                "auditoria"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar jugadores",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/superadmin/jugadores?q=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "superadmin",
+                "jugadores"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar jugador",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Nombre\",\n  \"apellido\": \"Apellido\",\n  \"telefono\": \"+5491111111111\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/superadmin/jugadores/{{playerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "superadmin",
+                "jugadores",
+                "{{playerId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancelar torneo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/superadmin/torneos/{{tournamentId}}/cancelar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "superadmin",
+                "torneos",
+                "{{tournamentId}}",
+                "cancelar"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset torneo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/superadmin/torneos/{{tournamentId}}/reset",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "superadmin",
+                "torneos",
+                "{{tournamentId}}",
+                "reset"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "04 - Partidos (SuperAdmin)",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{token}}",
+            "type": "string"
+          }
+        ]
+      },
+      "item": [
+        {
+          "name": "Forzar resultado",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"set1_pair1\": 6,\n  \"set1_pair2\": 4,\n  \"set2_pair1\": 6,\n  \"set2_pair2\": 2,\n  \"supertb_pair1\": null,\n  \"supertb_pair2\": null\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/partidos/{{matchId}}/resultado-forzado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "partidos",
+                "{{matchId}}",
+                "resultado-forzado"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cambiar parejas del partido",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pair1_id\": 1,\n  \"pair2_id\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/partidos/{{matchId}}/parejas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "partidos",
+                "{{matchId}}",
+                "parejas"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000/api"
+    },
+    {
+      "key": "username",
+      "value": "simpleline"
+    },
+    {
+      "key": "password",
+      "value": "S1mpl3L1n3"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "userRole",
+      "value": ""
+    },
+    {
+      "key": "tournamentId",
+      "value": "1"
+    },
+    {
+      "key": "matchId",
+      "value": "1"
+    },
+    {
+      "key": "playerId",
+      "value": "1"
+    }
+  ]
+}

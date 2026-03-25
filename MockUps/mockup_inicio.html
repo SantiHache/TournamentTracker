@@ -1,0 +1,112 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.app{background:var(--color-background-tertiary);min-height:600px;border-radius:var(--border-radius-lg);overflow:hidden;border:0.5px solid var(--color-border-tertiary)}
+.topbar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:0 28px;display:flex;align-items:center;height:56px;gap:20px}
+.topbar-logo{font-size:15px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:8px}
+.logo-dot{width:10px;height:10px;border-radius:50%;background:#3B6D11}
+.topbar-nav{display:flex;gap:4px;margin-left:auto}
+.tnav{padding:6px 14px;border-radius:var(--border-radius-md);font-size:13px;cursor:pointer;color:var(--color-text-secondary);border:0.5px solid transparent}
+.tnav.act{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-tertiary)}
+.topbar-btn{margin-left:12px;padding:7px 16px;border-radius:var(--border-radius-md);background:#3B6D11;color:#EAF3DE;font-size:13px;font-weight:500;border:none;cursor:pointer}
+.body{padding:32px 28px}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.page-title{font-size:20px;font-weight:500;color:var(--color-text-primary)}
+.page-sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:28px}
+.stats-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:32px}
+.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:14px 16px}
+.stat-l{font-size:11px;color:var(--color-text-secondary);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.stat-v{font-size:24px;font-weight:500;color:var(--color-text-primary)}
+.section-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--color-text-secondary);margin-bottom:14px}
+.torneo-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:28px}
+.tcard{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:16px 18px;cursor:pointer}
+.tcard:hover{border-color:var(--color-border-secondary)}
+.tcard-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.tcard-name{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.tcard-date{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.badge{display:inline-block;padding:3px 8px;border-radius:100px;font-size:11px;font-weight:500}
+.badge-act{background:#EAF3DE;color:#3B6D11}
+.badge-fin{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.tcard-row{display:flex;gap:16px;margin-top:8px}
+.tcard-stat{font-size:12px;color:var(--color-text-secondary)}
+.tcard-stat span{color:var(--color-text-primary);font-weight:500}
+.tcard-fase{margin-top:10px;padding-top:10px;border-top:0.5px solid var(--color-border-tertiary);font-size:12px;color:var(--color-text-secondary)}
+.fase-bar{height:4px;background:var(--color-border-tertiary);border-radius:2px;margin-top:6px;overflow:hidden}
+.fase-fill{height:100%;border-radius:2px;background:#3B6D11}
+.empty{background:var(--color-background-secondary);border:0.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:40px;text-align:center}
+.empty-icon{width:40px;height:40px;border-radius:50%;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.empty-t{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.empty-s{font-size:13px;color:var(--color-text-secondary)}
+</style>
+<div class="app">
+  <div class="topbar">
+    <div class="topbar-logo"><div class="logo-dot"></div>Pádel Torneo</div>
+    <div class="topbar-nav">
+      <div class="tnav act">Copa Verano 2025</div>
+      <div class="tnav">Copa Invierno</div>
+      <div class="tnav">Torneo Empresas</div>
+    </div>
+    <button class="topbar-btn">+ Nuevo torneo</button>
+  </div>
+  <div class="body">
+    <div class="page-header">
+      <div class="page-title">Torneos del día</div>
+    </div>
+    <div class="page-sub">Domingo 15 de diciembre, 2024</div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-l">Torneos hoy</div><div class="stat-v">3</div></div>
+      <div class="stat"><div class="stat-l">En curso</div><div class="stat-v">2</div></div>
+      <div class="stat"><div class="stat-l">Finalizados</div><div class="stat-v">1</div></div>
+      <div class="stat"><div class="stat-l">Total parejas</div><div class="stat-v">44</div></div>
+    </div>
+    <div class="section-label">Torneos activos</div>
+    <div class="torneo-grid">
+      <div class="tcard">
+        <div class="tcard-head">
+          <div><div class="tcard-name">Copa Verano 2025</div><div class="tcard-date">Creado hoy, 08:30</div></div>
+          <span class="badge badge-act">Activo</span>
+        </div>
+        <div class="tcard-row">
+          <div class="tcard-stat"><span>16</span> parejas</div>
+          <div class="tcard-stat"><span>4</span> zonas</div>
+        </div>
+        <div class="tcard-fase">Fase actual: Zonas — 8 de 12 partidos jugados
+          <div class="fase-bar"><div class="fase-fill" style="width:66%"></div></div>
+        </div>
+      </div>
+      <div class="tcard">
+        <div class="tcard-head">
+          <div><div class="tcard-name">Copa Invierno</div><div class="tcard-date">Creado hoy, 09:15</div></div>
+          <span class="badge badge-act">Activo</span>
+        </div>
+        <div class="tcard-row">
+          <div class="tcard-stat"><span>12</span> parejas</div>
+          <div class="tcard-stat"><span>4</span> zonas</div>
+        </div>
+        <div class="tcard-fase">Fase actual: Octavos — 2 de 4 partidos jugados
+          <div class="fase-bar"><div class="fase-fill" style="width:50%"></div></div>
+        </div>
+      </div>
+      <div class="tcard" style="border:0.5px dashed var(--color-border-secondary);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;min-height:120px">
+        <div style="font-size:22px;color:var(--color-text-secondary)">+</div>
+        <div style="font-size:13px;color:var(--color-text-secondary)">Crear nuevo torneo</div>
+      </div>
+    </div>
+    <div class="section-label">Finalizados</div>
+    <div class="torneo-grid">
+      <div class="tcard">
+        <div class="tcard-head">
+          <div><div class="tcard-name">Torneo Empresas</div><div class="tcard-date">Finalizado hoy, 13:45</div></div>
+          <span class="badge badge-fin">Finalizado</span>
+        </div>
+        <div class="tcard-row">
+          <div class="tcard-stat"><span>16</span> parejas</div>
+          <div class="tcard-stat">Campeón: <span>García / López</span></div>
+        </div>
+        <div class="tcard-fase">Duración total: 5 horas 15 min
+          <div class="fase-bar"><div class="fase-fill" style="width:100%;background:#97C459"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-green: #18a558;
+  --brand-violet: #7b3fe4;
+}
+
+body {
+  @apply bg-sky text-ink font-display;
+  min-height: 100vh;
+  background-image: radial-gradient(circle at 15% 20%, rgba(24, 165, 88, 0.16), transparent 36%),
+    radial-gradient(circle at 85% 12%, rgba(123, 63, 228, 0.16), transparent 40%),
+    linear-gradient(135deg, #f8fcff 0%, #f3faff 45%, #eef9f8 100%);
+}
+
+.card {
+  @apply rounded-2xl bg-white/90 backdrop-blur shadow-card border border-white;
+}
+
+.btn-primary {
+  @apply bg-brandGreen hover:bg-emerald-600 text-white font-semibold rounded-xl px-4 py-2 transition;
+}
+
+.btn-secondary {
+  @apply bg-brandViolet hover:bg-violet-700 text-white font-semibold rounded-xl px-4 py-2 transition;
+}
+
+.input {
+  @apply w-full rounded-xl border border-slate-200 px-3 py-2 outline-none focus:ring-2 focus:ring-brandViolet/40;
+}

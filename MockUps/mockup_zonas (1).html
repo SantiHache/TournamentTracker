@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tournament Tracker — Zonas</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --verde:#52B788;--verde-oscuro:#1A3D2B;--verde-mid:#2D6A4F;--verde-claro:#97C459;
+  --violeta:#8B5CF6;--violeta-claro:#A78BFA;
+  --ambar:#F59E0B;--ambar-claro:#FCD34D;
+  --fondo:#080C0A;--fondo2:#0E1612;--fondo3:#141F18;--fondo4:#1C2B21;
+  --texto:#F0F7F2;--texto2:#8BAF93;--texto3:#4A6B52;
+  --borde:rgba(82,183,136,0.12);--borde2:rgba(82,183,136,0.25);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--fondo);color:var(--texto);min-height:100vh}
+
+.topbar{background:rgba(14,22,18,0.95);border-bottom:1px solid var(--borde);padding:0 32px;height:64px;display:flex;align-items:center;gap:12px;backdrop-filter:blur(12px)}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-icon{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--verde-oscuro),var(--verde-mid));border:1px solid var(--borde2);display:flex;align-items:center;justify-content:center}
+.brand-icon svg{width:20px;height:20px}
+.brand-name{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--texto)}
+.brand-name span{color:var(--verde)}
+.torneo-sel{
+  margin-left:20px;padding:7px 14px;
+  background:var(--fondo3);border:1px solid var(--borde2);border-radius:8px;
+  color:var(--verde);font-family:'DM Sans',sans-serif;font-size:13px;
+  outline:none;cursor:pointer;
+}
+.tabs{display:flex;gap:2px;margin-left:auto;background:var(--fondo3);border:1px solid var(--borde);border-radius:10px;padding:3px}
+.tab{padding:7px 18px;border-radius:7px;font-size:13px;color:var(--texto3);cursor:pointer;transition:all .2s;font-weight:500}
+.tab:hover{color:var(--texto2)}
+.tab.act{background:var(--fondo4);color:var(--verde);border:1px solid var(--borde2)}
+.tab.dis{opacity:.35;cursor:default}
+.sl-badge{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;border:1px solid rgba(139,92,246,0.2);background:rgba(139,92,246,0.06);margin-left:12px}
+.sl-dot{width:6px;height:6px;border-radius:50%;background:var(--violeta)}
+.sl-txt{font-size:11px;color:var(--violeta-claro);font-weight:500}
+
+.warn{
+  margin:20px 32px;padding:14px 18px;border-radius:10px;
+  background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);
+  display:flex;align-items:center;gap:12px;
+}
+.warn-icon{
+  width:24px;height:24px;border-radius:50%;flex-shrink:0;
+  background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:var(--ambar);
+}
+.warn-txt{font-size:13px;color:#FCD34D;line-height:1.5}
+.warn-txt strong{color:var(--ambar-claro)}
+
+.body{padding:0 32px 48px}
+.zonas-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+
+/* ZONA CARD */
+.zona{background:var(--fondo2);border:1px solid var(--borde);border-radius:16px;overflow:hidden;transition:border-color .2s}
+.zona:hover{border-color:var(--borde2)}
+.zona.empate{border-color:rgba(245,158,11,0.3)}
+
+.zona-head{
+  padding:14px 18px;border-bottom:1px solid var(--borde);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.zona-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--texto);display:flex;align-items:center;gap:8px}
+.zona-letter{
+  width:26px;height:26px;border-radius:6px;
+  background:rgba(82,183,136,0.1);border:1px solid var(--borde2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:var(--verde);
+}
+.zbadge{padding:3px 10px;border-radius:100px;font-size:11px;font-weight:500}
+.zbadge-ok{background:rgba(82,183,136,0.1);color:var(--verde);border:1px solid rgba(82,183,136,0.2)}
+.zbadge-emp{background:rgba(245,158,11,0.1);color:var(--ambar);border:1px solid rgba(245,158,11,0.25)}
+
+/* POSICIONES */
+.pos-table{width:100%;border-collapse:collapse}
+.pos-table th{padding:7px 16px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--texto3);font-weight:500;text-align:left;border-bottom:1px solid var(--borde)}
+.pos-table th:not(:nth-child(2)){text-align:center}
+.pos-row td{padding:9px 16px;border-top:1px solid var(--borde);font-size:13px;transition:background .15s}
+.pos-row:hover td{background:var(--fondo3)}
+.pos-row.win td{background:rgba(82,183,136,0.05)}
+.pos-row.win:hover td{background:rgba(82,183,136,0.09)}
+.pos-row.emp td{background:rgba(245,158,11,0.04)}
+.pos-num{color:var(--texto3);text-align:center;font-size:12px;width:32px}
+.pos-name-cell{color:var(--texto)}
+.pos-name{font-size:13px;font-weight:500;color:var(--texto)}
+.pos-wa{font-size:10px;color:var(--verde);text-decoration:underline;cursor:pointer;opacity:.7;transition:opacity .2s}
+.pos-wa:hover{opacity:1}
+.pos-val{text-align:center;color:var(--texto2);width:40px}
+.pos-pts{text-align:center;font-weight:700;color:var(--verde);width:40px}
+.pos-pts.emp{color:var(--ambar)}
+.pos-num.emp{color:var(--ambar);font-size:15px}
+
+/* EMPATE CONTROLS */
+.empate-controls{padding:10px 16px;border-top:1px solid rgba(245,158,11,0.15);display:flex;gap:8px}
+.emp-btn{
+  flex:1;padding:8px 10px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;
+  border:1px solid rgba(245,158,11,0.3);background:rgba(245,158,11,0.07);
+  color:var(--ambar);font-family:'DM Sans',sans-serif;transition:all .2s;
+}
+.emp-btn:hover{background:rgba(245,158,11,0.13);border-color:rgba(245,158,11,0.5)}
+
+/* PARTIDOS */
+.partidos-section{border-top:1px solid var(--borde)}
+.partidos-title{padding:10px 16px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--texto3);font-weight:500}
+.partido{margin:0 12px 10px;border:1px solid var(--borde);border-radius:10px;padding:10px 14px;transition:border-color .2s}
+.partido:hover{border-color:var(--borde2)}
+.partido.pendiente{border-color:rgba(82,183,136,0.3);background:rgba(82,183,136,0.03)}
+.partido-label{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--texto3);margin-bottom:8px;font-weight:500}
+.partido-label.pend{color:var(--verde)}
+.partido-row{display:flex;align-items:center;gap:8px}
+.ptm{flex:1;font-size:12px;color:var(--texto)}
+.ptm.right{text-align:right}
+.scores{display:flex;gap:3px}
+.sc{
+  width:24px;height:22px;border-radius:4px;
+  background:var(--fondo3);border:1px solid var(--borde);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:600;color:var(--texto);
+}
+.sc.win{background:rgba(82,183,136,0.12);border-color:rgba(82,183,136,0.3);color:var(--verde)}
+.sc.lose{color:var(--texto3)}
+.sc.empty{border-style:dashed;color:var(--texto3)}
+.vs{font-size:10px;color:var(--texto3)}
+.cargar-btn{
+  font-size:11px;padding:4px 12px;border-radius:100px;white-space:nowrap;
+  border:1px solid var(--verde);color:var(--verde);background:rgba(82,183,136,0.08);cursor:pointer;
+  font-family:'DM Sans',sans-serif;transition:all .2s;
+}
+.cargar-btn:hover{background:rgba(82,183,136,0.15)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.zona{animation:fadeUp .35s ease both}
+.zona:nth-child(2){animation-delay:.08s}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="6" height="4" rx="1.5" fill="#52B788"/><rect x="2" y="12" width="6" height="4" rx="1.5" fill="#52B788"/><line x1="8" y1="6" x2="12" y2="6" stroke="#52B788" stroke-width="1.2"/><line x1="8" y1="14" x2="12" y2="14" stroke="#52B788" stroke-width="1.2"/><line x1="12" y1="6" x2="12" y2="14" stroke="#52B788" stroke-width="1.2"/><line x1="12" y1="10" x2="15" y2="10" stroke="#97C459" stroke-width="1.2"/><rect x="15" y="8" width="3" height="4" rx="1" fill="#97C459"/></svg>
+    </div>
+    <div class="brand-name">Tournament <span>Tracker</span></div>
+  </div>
+  <select class="torneo-sel"><option>Copa Verano 2025</option></select>
+  <div class="tabs">
+    <div class="tab">Parejas</div>
+    <div class="tab act">Zonas</div>
+    <div class="tab dis">Eliminatorias</div>
+    <div class="tab dis">Final</div>
+  </div>
+  <div class="sl-badge"><div class="sl-dot"></div><span class="sl-txt">Simple Line Solutions</span></div>
+</div>
+
+<div class="warn">
+  <div class="warn-icon">!</div>
+  <div class="warn-txt"><strong>Empate en Zona C</strong> — García/López y Martínez/Rodríguez tienen 2 pts. Definí las posiciones manualmente para continuar a eliminatorias.</div>
+</div>
+
+<div class="body">
+  <div class="zonas-grid">
+    <div class="zona">
+      <div class="zona-head">
+        <div class="zona-name"><div class="zona-letter">A</div>Zona A — 4 parejas</div>
+        <span class="zbadge zbadge-ok">Completa</span>
+      </div>
+      <table class="pos-table">
+        <thead><tr><th>#</th><th>Pareja</th><th>PJ</th><th>PG</th><th>Pts</th></tr></thead>
+        <tbody>
+          <tr class="pos-row win"><td class="pos-num">1°</td><td class="pos-name-cell"><div class="pos-name">Sánchez / Ruiz</div><div class="pos-wa">WhatsApp</div></td><td class="pos-val">2</td><td class="pos-val">2</td><td class="pos-pts">4</td></tr>
+          <tr class="pos-row"><td class="pos-num">2°</td><td class="pos-name-cell"><div class="pos-name">Torres / Díaz</div><div class="pos-wa">WhatsApp</div></td><td class="pos-val">2</td><td class="pos-val">1</td><td class="pos-pts">2</td></tr>
+          <tr class="pos-row"><td class="pos-num">3°</td><td class="pos-name-cell"><div class="pos-name">Vargas / Castro</div><div class="pos-wa">WhatsApp</div></td><td class="pos-val">2</td><td class="pos-val">1</td><td class="pos-pts">2</td></tr>
+          <tr class="pos-row"><td class="pos-num">4°</td><td class="pos-name-cell"><div class="pos-name">Morales / Vega</div><div class="pos-wa">WhatsApp</div></td><td class="pos-val">2</td><td class="pos-val">0</td><td class="pos-pts">0</td></tr>
+        </tbody>
+      </table>
+      <div class="partidos-section">
+        <div class="partidos-title">Partidos</div>
+        <div class="partido">
+          <div class="partido-label">Ronda 1 · Partido 1</div>
+          <div class="partido-row">
+            <span class="ptm">Sánchez / Ruiz</span>
+            <div class="scores"><div class="sc win">6</div><div class="sc win">6</div></div>
+            <span class="vs">vs</span>
+            <div class="scores"><div class="sc lose">3</div><div class="sc lose">4</div></div>
+            <span class="ptm right">Vargas / Castro</span>
+          </div>
+        </div>
+        <div class="partido">
+          <div class="partido-label">Ronda 1 · Partido 2</div>
+          <div class="partido-row">
+            <span class="ptm">Torres / Díaz</span>
+            <div class="scores"><div class="sc win">7</div><div class="sc win">6</div></div>
+            <span class="vs">vs</span>
+            <div class="scores"><div class="sc lose">5</div><div class="sc lose">3</div></div>
+            <span class="ptm right">Morales / Vega</span>
+          </div>
+        </div>
+        <div class="partido pendiente">
+          <div class="partido-label pend">Ronda 2 · Final de zona</div>
+          <div class="partido-row">
+            <span class="ptm">Sánchez / Ruiz</span>
+            <div class="scores"><div class="sc empty">-</div><div class="sc empty">-</div></div>
+            <span class="vs">vs</span>
+            <div class="scores"><div class="sc empty">-</div><div class="sc empty">-</div></div>
+            <span class="ptm right">Torres / Díaz</span>
+            <button class="cargar-btn">Cargar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="zona empate">
+      <div class="zona-head">
+        <div class="zona-name"><div class="zona-letter" style="background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.3);color:var(--ambar)">C</div>Zona C — 4 parejas</div>
+        <span class="zbadge zbadge-emp">Empate</span>
+      </div>
+      <table class="pos-table">
+        <thead><tr><th>#</th><th>Pareja</th><th>PJ</th><th>PG</th><th>Pts</th></tr></thead>
+        <tbody>
+          <tr class="pos-row emp"><td class="pos-num emp">?</td><td class="pos-name-cell"><div class="pos-name">García / López</div><div class="pos-wa">WhatsApp</div></td><td class="pos-val">2</td><td class="pos-val">1</td><td class="pos-pts emp">2</td></tr>
+          <tr class="pos-row emp"><td class="pos-num emp">?</td><td class="pos-name-cell"><div class="pos-name">Martínez / Rodríguez</div><div class="pos-wa">WhatsApp</div></td><td class="pos-val">2</td><td class="pos-val">1</td><td class="pos-pts emp">2</td></tr>
+          <tr class="pos-row"><td class="pos-num">3°</td><td class="pos-name-cell"><div class="pos-name">Pérez / Silva</div><div class="pos-wa">WhatsApp</div></td><td class="pos-val">2</td><td class="pos-val">0</td><td class="pos-pts">0</td></tr>
+        </tbody>
+      </table>
+      <div class="empate-controls">
+        <button class="emp-btn">↑ García / López queda 1°</button>
+        <button class="emp-btn">↑ Martínez / Rodríguez queda 1°</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

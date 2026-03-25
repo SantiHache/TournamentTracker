@@ -1,0 +1,122 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.app{background:var(--color-background-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;border:0.5px solid var(--color-border-tertiary)}
+.topbar{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:0 28px;display:flex;align-items:center;height:56px;gap:12px}
+.logo{font-size:15px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:8px}
+.logo-dot{width:10px;height:10px;border-radius:50%;background:#3B6D11}
+.torneo-sel{margin-left:16px;padding:5px 12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary);font-size:13px}
+.tabs{display:flex;gap:2px;margin-left:auto}
+.tab{padding:6px 16px;border-radius:var(--border-radius-md);font-size:13px;color:var(--color-text-secondary);cursor:pointer}
+.tab.act{background:var(--color-background-secondary);color:var(--color-text-primary);font-weight:500}
+.tab.dis{opacity:.4;cursor:default}
+.body{padding:24px 28px}
+.warn{background:#FAEEDA;border:0.5px solid #EF9F27;border-radius:var(--border-radius-md);padding:10px 14px;font-size:13px;color:#633806;display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.warn-icon{width:20px;height:20px;border-radius:50%;background:#EF9F27;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0}
+.zonas-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.zona{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.zona-head{padding:12px 16px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between}
+.zona-name{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.zona-badge{font-size:11px;padding:2px 8px;border-radius:100px}
+.zb-ok{background:#EAF3DE;color:#3B6D11}
+.zb-pend{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.posiciones{border-bottom:0.5px solid var(--color-border-tertiary)}
+.pos-head{display:grid;grid-template-columns:24px 1fr 32px 32px 32px;gap:6px;padding:6px 14px;font-size:11px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.5px}
+.pos-row{display:grid;grid-template-columns:24px 1fr 32px 32px 32px;gap:6px;padding:7px 14px;align-items:center;border-top:0.5px solid var(--color-border-tertiary)}
+.pos-num{font-size:12px;color:var(--color-text-secondary);text-align:center}
+.pos-name{font-size:13px;color:var(--color-text-primary)}
+.pos-wa{font-size:10px;color:#3B6D11;text-decoration:underline;cursor:pointer}
+.pos-val{font-size:13px;text-align:center;color:var(--color-text-primary)}
+.pos-val.pts{font-weight:500;color:#3B6D11}
+.pos-row.win{background:#EAF3DE}
+.pos-row.emp{background:#FAEEDA}
+.partidos{padding:12px 14px}
+.partido{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:8px 12px;margin-bottom:8px}
+.partido-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--color-text-secondary);margin-bottom:6px}
+.partido-row{display:flex;align-items:center;gap:8px}
+.partido-team{flex:1;font-size:12px;color:var(--color-text-primary)}
+.partido-score{display:flex;gap:4px}
+.score-box{width:26px;height:24px;border:0.5px solid var(--color-border-secondary);border-radius:4px;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.score-box.win{background:#EAF3DE;border-color:#97C459;color:#27500A}
+.score-box.lose{color:var(--color-text-secondary)}
+.score-empty{width:26px;height:24px;border:0.5px dashed var(--color-border-secondary);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--color-text-secondary)}
+.vs{font-size:11px;color:var(--color-text-secondary)}
+.cargar-btn{font-size:11px;padding:4px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-secondary);cursor:pointer;white-space:nowrap}
+.cargar-btn.pend{border-color:#3B6D11;color:#3B6D11;background:#EAF3DE}
+</style>
+<div class="app">
+  <div class="topbar">
+    <div class="logo"><div class="logo-dot"></div>Pádel Torneo</div>
+    <select class="torneo-sel"><option>Copa Verano 2025</option></select>
+    <div class="tabs">
+      <div class="tab">Parejas</div>
+      <div class="tab act">Zonas</div>
+      <div class="tab dis">Eliminatorias</div>
+      <div class="tab dis">Final</div>
+    </div>
+  </div>
+  <div class="body">
+    <div class="warn">
+      <div class="warn-icon">!</div>
+      <span>Empate en Zona C — García/López y Martínez/Rodríguez tienen 2 pts. Definí las posiciones manualmente para continuar.</span>
+    </div>
+    <div class="zonas-grid">
+      <div class="zona">
+        <div class="zona-head"><span class="zona-name">Zona A — 4 parejas</span><span class="zona-badge zb-ok">Completa</span></div>
+        <div class="posiciones">
+          <div class="pos-head"><span>#</span><span>Pareja</span><span style="text-align:center">PJ</span><span style="text-align:center">PG</span><span style="text-align:center">Pts</span></div>
+          <div class="pos-row win"><span class="pos-num">1°</span><div><div class="pos-name">Sánchez / Ruiz</div><div class="pos-wa">WhatsApp</div></div><span class="pos-val">2</span><span class="pos-val">2</span><span class="pos-val pts">4</span></div>
+          <div class="pos-row"><span class="pos-num">2°</span><div><div class="pos-name">Torres / Díaz</div><div class="pos-wa">WhatsApp</div></div><span class="pos-val">2</span><span class="pos-val">1</span><span class="pos-val pts">2</span></div>
+          <div class="pos-row"><span class="pos-num">3°</span><div><div class="pos-name">Vargas / Castro</div><div class="pos-wa">WhatsApp</div></div><span class="pos-val">2</span><span class="pos-val">1</span><span class="pos-val pts">2</span></div>
+          <div class="pos-row"><span class="pos-num">4°</span><div><div class="pos-name">Morales / Vega</div><div class="pos-wa">WhatsApp</div></div><span class="pos-val">2</span><span class="pos-val">0</span><span class="pos-val pts">0</span></div>
+        </div>
+        <div class="partidos">
+          <div class="partido">
+            <div class="partido-label">Ronda 1 · Partido 1</div>
+            <div class="partido-row">
+              <span class="partido-team">Sánchez / Ruiz</span>
+              <div class="partido-score"><div class="score-box win">6</div><div class="score-box win">6</div></div>
+              <span class="vs">vs</span>
+              <div class="partido-score"><div class="score-box lose">3</div><div class="score-box lose">4</div></div>
+              <span class="partido-team" style="text-align:right">Vargas / Castro</span>
+            </div>
+          </div>
+          <div class="partido">
+            <div class="partido-label">Ronda 1 · Partido 2</div>
+            <div class="partido-row">
+              <span class="partido-team">Torres / Díaz</span>
+              <div class="partido-score"><div class="score-box win">7</div><div class="score-box win">6</div></div>
+              <span class="vs">vs</span>
+              <div class="partido-score"><div class="score-box lose">5</div><div class="score-box lose">3</div></div>
+              <span class="partido-team" style="text-align:right">Morales / Vega</span>
+            </div>
+          </div>
+          <div class="partido" style="border-color:#3B6D11">
+            <div class="partido-label" style="color:#3B6D11">Ronda 2 · Final de zona</div>
+            <div class="partido-row">
+              <span class="partido-team">Sánchez / Ruiz</span>
+              <div class="partido-score"><div class="score-empty">-</div><div class="score-empty">-</div></div>
+              <span class="vs">vs</span>
+              <div class="partido-score"><div class="score-empty">-</div><div class="score-empty">-</div></div>
+              <span class="partido-team" style="text-align:right">Torres / Díaz</span>
+              <button class="cargar-btn pend">Cargar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="zona">
+        <div class="zona-head"><span class="zona-name">Zona C — 4 parejas</span><span class="zona-badge" style="background:#FAEEDA;color:#633806">Empate</span></div>
+        <div class="posiciones">
+          <div class="pos-head"><span>#</span><span>Pareja</span><span style="text-align:center">PJ</span><span style="text-align:center">PG</span><span style="text-align:center">Pts</span></div>
+          <div class="pos-row emp"><span class="pos-num" style="color:#854F0B">?</span><div><div class="pos-name">García / López</div><div class="pos-wa">WhatsApp</div></div><span class="pos-val">2</span><span class="pos-val">1</span><span class="pos-val" style="color:#854F0B;font-weight:500">2</span></div>
+          <div class="pos-row emp"><span class="pos-num" style="color:#854F0B">?</span><div><div class="pos-name">Martínez / Rodríguez</div><div class="pos-wa">WhatsApp</div></div><span class="pos-val">2</span><span class="pos-val">1</span><span class="pos-val" style="color:#854F0B;font-weight:500">2</span></div>
+          <div class="pos-row"><span class="pos-num">3°</span><div><div class="pos-name">Pérez / Silva</div><div class="pos-wa">WhatsApp</div></div><span class="pos-val">2</span><span class="pos-val">0</span><span class="pos-val pts">0</span></div>
+          <div style="padding:10px 14px;border-top:0.5px solid var(--color-border-tertiary);display:flex;gap:8px">
+            <button style="flex:1;padding:7px;border:0.5px solid #EF9F27;border-radius:var(--border-radius-md);background:#FAEEDA;color:#633806;font-size:12px;cursor:pointer">↑ García / López queda 1°</button>
+            <button style="flex:1;padding:7px;border:0.5px solid #EF9F27;border-radius:var(--border-radius-md);background:#FAEEDA;color:#633806;font-size:12px;cursor:pointer">↑ Martínez / Rodríguez queda 1°</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
