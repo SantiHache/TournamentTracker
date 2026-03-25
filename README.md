@@ -6,7 +6,7 @@ Aplicacion full stack para gestion de torneos de padel.
 - Frontend: React + Vite + Tailwind
 - Backend: Node.js + Express
 - DB: SQLite + better-sqlite3
-- Auth: JWT + bcrypt
+- Auth: JWT + bcrypt 
 
 ## Requisitos
 - Node.js 20+
