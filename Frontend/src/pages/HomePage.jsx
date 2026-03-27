@@ -193,6 +193,11 @@ export default function HomePage() {
       .sort((a, b) => a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base" }));
   }, [createOptions.global_courts]);
 
+  const hasLocalCourtsInOptions = useMemo(
+    () => createOptions.global_courts.some((court) => String(court.scope_type || "") === "local" || !court.club_id),
+    [createOptions.global_courts]
+  );
+
   const filteredCourts = useMemo(() => {
     if (selectedClubFilter === "all") return createOptions.global_courts;
     return createOptions.global_courts.filter((court) => String(court.club_id || "") === selectedClubFilter);
@@ -412,7 +417,11 @@ export default function HomePage() {
                       >
                         <span className="home-choice-check">{selected ? "Seleccionada" : "Disponible"}</span>
                         <strong>{court.nombre}</strong>
-                        {hasClubDataInCourts && <span className="home-choice-club">Club: {court.club_nombre || "Sin club"}</span>}
+                        {hasClubDataInCourts ? (
+                          <span className="home-choice-club">Club: {court.club_nombre || "Sin club"}</span>
+                        ) : (
+                          hasLocalCourtsInOptions && <span className="home-choice-club">Cancha local del club</span>
+                        )}
                         <span>{court.descripcion || "Sin descripcion"}</span>
                       </button>
                     );

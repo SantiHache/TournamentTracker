@@ -15,6 +15,11 @@ const { getZonesCount } = require("../logic/zonas");
 
 const router = express.Router();
 
+function courtScopeFilter(alias = "") {
+  const prefix = alias ? `${alias}.` : "";
+  return config.isCircuitMode ? `${prefix}club_id IS NOT NULL` : `${prefix}club_id IS NULL`;
+}
+
 const createSchema = z.object({
   body: z.object({
     name: z.string().min(1),
@@ -297,6 +302,7 @@ router.post("/", validate(createSchema), (req, res) => {
       `SELECT id, nombre, descripcion
        FROM global_courts
        WHERE activo = 1
+         AND ${courtScopeFilter()}
          AND id IN (${data.global_court_ids.map(() => "?").join(",")})
        ORDER BY id ASC`
     )
@@ -383,10 +389,12 @@ router.get("/opciones-creacion", (req, res) => {
 
   const globalCourts = db
     .prepare(
-      `SELECT gc.id, gc.nombre, gc.descripcion, gc.club_id, gcl.nombre AS club_nombre, gc.activo
+      `SELECT gc.id, gc.nombre, gc.descripcion, gc.club_id, gcl.nombre AS club_nombre, gc.activo,
+              CASE WHEN gc.club_id IS NULL THEN 'local' ELSE 'club' END AS scope_type
        FROM global_courts gc
        LEFT JOIN global_clubs gcl ON gcl.id = gc.club_id
        WHERE gc.activo = 1
+         AND ${courtScopeFilter("gc")}
        ORDER BY gc.id ASC`
     )
     .all();

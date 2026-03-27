@@ -18,7 +18,8 @@ export default function ConfiguracionPage() {
   const [profiles, setProfiles] = useState([]);
   const [defaultType, setDefaultType] = useState("");
   const [installationMode, setInstallationMode] = useState(null);
-  const isCircuitMode = installationMode === "circuit";
+  const [circuitEnabled, setCircuitEnabled] = useState(false);
+  const isCircuitMode = installationMode === "circuit" && circuitEnabled;
   const [newClubName, setNewClubName] = useState("");
   const [newClubDesc, setNewClubDesc] = useState("");
   const [newClubActive, setNewClubActive] = useState(true);
@@ -53,6 +54,7 @@ export default function ConfiguracionPage() {
     setProfiles(optionsData?.tournament_types || []);
     setDefaultType(optionsData?.default_tournament_type || "");
     setInstallationMode(appConfigData?.installationMode || null);
+    setCircuitEnabled(Boolean(appConfigData?.circuitEnabled));
   };
 
   useEffect(() => {
@@ -236,23 +238,23 @@ export default function ConfiguracionPage() {
         activo: Number(court.activo) !== 1,
       });
       setInfo(`Cancha ${Number(court.activo) === 1 ? "desactivada" : "activada"}`);
-        const removeClub = async (id) => {
-          if (!canEditGlobalConfig) {
-            setError("Solo el admin de la instalacion puede editar clubes");
-            return;
-          }
-          try {
-            await api.delete(`/clubs-globales/${id}`);
-            setInfo("Club eliminado");
-            await loadData();
-          } catch (err) {
-            setError(err.response?.data?.error || "No se pudo eliminar el club");
-          }
-        };
-
       await loadData();
     } catch (err) {
       setError(err.response?.data?.error || "No se pudo actualizar la cancha global");
+    }
+  };
+
+  const removeClub = async (id) => {
+    if (!canEditGlobalConfig) {
+      setError("Solo el admin de la instalacion puede editar clubes");
+      return;
+    }
+    try {
+      await api.delete(`/clubs-globales/${id}`);
+      setInfo("Club eliminado");
+      await loadData();
+    } catch (err) {
+      setError(err.response?.data?.error || "No se pudo eliminar el club");
     }
   };
 
@@ -431,7 +433,11 @@ export default function ConfiguracionPage() {
                 </span>
               </div>
               <p className="config-global-item-desc">{court.descripcion || "Sin descripcion"}</p>
-              {isCircuitMode && <p className="config-global-item-desc">Club: {court.club_nombre || "Sin club"}</p>}
+              {isCircuitMode ? (
+                <p className="config-global-item-desc">Club: {court.club_nombre || "Sin club"}</p>
+              ) : (
+                <p className="config-global-item-desc">Tipo: Cancha local del club</p>
+              )}
 
               {canEditGlobalConfig && (
                 <>
