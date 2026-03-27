@@ -32,6 +32,7 @@ export default function HomePage() {
   });
   const [form, setForm] = useState(INITIAL_FORM);
   const [wizardStep, setWizardStep] = useState(1);
+  const [selectedClubFilter, setSelectedClubFilter] = useState("all");
   const [error, setError] = useState("");
   const [cardsError, setCardsError] = useState("");
   const [toasts, setToasts] = useState([]);
@@ -175,6 +176,27 @@ export default function HomePage() {
     () => createOptions.payment_methods.filter((method) => form.enabled_payment_method_ids.includes(Number(method.id))),
     [createOptions.payment_methods, form.enabled_payment_method_ids]
   );
+
+  const hasClubDataInCourts = useMemo(
+    () => createOptions.global_courts.some((court) => String(court.club_nombre || "").trim().length > 0),
+    [createOptions.global_courts]
+  );
+
+  const availableClubs = useMemo(() => {
+    const map = new Map();
+    for (const court of createOptions.global_courts) {
+      if (!court.club_id || !court.club_nombre) continue;
+      map.set(String(court.club_id), court.club_nombre);
+    }
+    return Array.from(map.entries())
+      .map(([id, nombre]) => ({ id, nombre }))
+      .sort((a, b) => a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base" }));
+  }, [createOptions.global_courts]);
+
+  const filteredCourts = useMemo(() => {
+    if (selectedClubFilter === "all") return createOptions.global_courts;
+    return createOptions.global_courts.filter((court) => String(court.club_id || "") === selectedClubFilter);
+  }, [createOptions.global_courts, selectedClubFilter]);
 
   const toggleSelection = (key, value) => {
     setForm((prev) => ({
@@ -358,8 +380,28 @@ export default function HomePage() {
               <div className="home-wizard-placeholder">Completa el paso 1 para habilitar la seleccion de canchas.</div>
             ) : (
               <>
+                {hasClubDataInCourts && (
+                  <div className="home-court-filter-wrap">
+                    <label className="home-field">
+                      <span className="home-field-label">Filtrar por club</span>
+                      <select
+                        className="input"
+                        value={selectedClubFilter}
+                        onChange={(e) => setSelectedClubFilter(e.target.value)}
+                      >
+                        <option value="all">Todos los clubes</option>
+                        {availableClubs.map((club) => (
+                          <option key={club.id} value={club.id}>
+                            {club.nombre}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  </div>
+                )}
+
                 <div className="home-selection-grid">
-                  {createOptions.global_courts.map((court) => {
+                  {filteredCourts.map((court) => {
                     const selected = form.global_court_ids.includes(Number(court.id));
                     return (
                       <button
@@ -370,10 +412,15 @@ export default function HomePage() {
                       >
                         <span className="home-choice-check">{selected ? "Seleccionada" : "Disponible"}</span>
                         <strong>{court.nombre}</strong>
+                        {hasClubDataInCourts && <span className="home-choice-club">Club: {court.club_nombre || "Sin club"}</span>}
                         <span>{court.descripcion || "Sin descripcion"}</span>
                       </button>
                     );
                   })}
+
+                  {!loadingCreateOptions && !!createOptions.global_courts.length && !filteredCourts.length && (
+                    <p className="home-empty-inline">No hay canchas para el club seleccionado.</p>
+                  )}
 
                   {!loadingCreateOptions && !createOptions.global_courts.length && (
                     <p className="home-empty-inline">No hay canchas globales cargadas en Configuracion Global.</p>

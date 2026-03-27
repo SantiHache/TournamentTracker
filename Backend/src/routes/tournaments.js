@@ -383,10 +383,11 @@ router.get("/opciones-creacion", (req, res) => {
 
   const globalCourts = db
     .prepare(
-      `SELECT id, nombre, descripcion, activo
-       FROM global_courts
-       WHERE activo = 1
-       ORDER BY id ASC`
+      `SELECT gc.id, gc.nombre, gc.descripcion, gc.club_id, gcl.nombre AS club_nombre, gc.activo
+       FROM global_courts gc
+       LEFT JOIN global_clubs gcl ON gcl.id = gc.club_id
+       WHERE gc.activo = 1
+       ORDER BY gc.id ASC`
     )
     .all();
 

@@ -1,0 +1,1 @@
+ALTER TABLE global_courts ADD COLUMN club TEXT;
