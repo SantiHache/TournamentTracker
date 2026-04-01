@@ -1,0 +1,11 @@
+# Archivos a IGNORAR en deploy de Vercel
+*.db
+*.db-shm
+*.db-wal
+data/*.db
+data/*.db-shm
+data/*.db-wal
+node_modules
+.env
+.env.local
+.git
