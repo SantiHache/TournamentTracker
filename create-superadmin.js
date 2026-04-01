@@ -1,40 +1,80 @@
-const Database = require("better-sqlite3");
+require("dotenv").config({ path: "./Backend/.env" });
 const bcrypt = require("bcryptjs");
-const path = require("path");
+const { Pool } = require("pg");
+const readline = require("readline");
 
-const dbPath = path.join(__dirname, "server/data/torneo.db");
-const db = new Database(dbPath);
+// Configurar conexión PostgreSQL
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
 
-console.log("🔑 Creando usuario SuperAdmin...\n");
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
-try {
-  // Check if superadmin exists
-  const existing = db.prepare("SELECT id FROM users WHERE role = 'superadmin'").get();
-  
-  if (existing) {
-    console.log("✓ SuperAdmin ya existe");
-    db.close();
-    process.exit(0);
-  }
-
-  // Create superadmin
-  const username = "simpleline";
-  const password = "simpleline123"; // Default password
-  const passwordHash = bcrypt.hashSync(password, 10);
-  const nombre = "Simple Line Solutions";
-
-  db.prepare(
-    "INSERT INTO users (username, password_hash, role, nombre, activo) VALUES (?, ?, 'superadmin', ?, 1)"
-  ).run(username, passwordHash, nombre);
-
-  console.log("✅ SuperAdmin creado:");
-  console.log(`   Username: ${username}`);
-  console.log(`   Password: ${password}`);
-  console.log(`   Name: ${nombre}`);
-
-  db.close();
-
-} catch (err) {
-  console.error(`❌ Error: ${err.message}`);
-  process.exit(1);
+function question(prompt) {
+  return new Promise((resolve) => {
+    rl.question(prompt, resolve);
+  });
 }
+
+async function createSuperAdmin() {
+  console.log("🔑 Creando usuario SuperAdmin...\n");
+
+  try {
+    // Check if superadmin exists
+    const existing = await pool.query("SELECT id FROM users WHERE role = 'superadmin'");
+    
+    if (existing.rows.length > 0) {
+      console.log("✓ SuperAdmin ya existe");
+      const recreate = await question("¿Quieres crear otro superadmin? (s/n): ");
+      if (recreate.toLowerCase() !== 's') {
+        rl.close();
+        await pool.end();
+        process.exit(0);
+      }
+    }
+
+    // Get credentials
+    const username = await question("Username: ");
+    const nombre = await question("Nombre completo: ");
+    const email = await question("Email: ");
+    const password = await question("Password (mínimo 8 caracteres): ");
+
+    if (password.length < 8) {
+      console.error("❌ Error: El password debe tener al menos 8 caracteres");
+      rl.close();
+      await pool.end();
+      process.exit(1);
+    }
+
+    // Create superadmin
+    const passwordHash = bcrypt.hashSync(password, 10);
+
+    await pool.query(
+      `INSERT INTO users (username, password_hash, role, nombre, email, activo) 
+       VALUES ($1, $2, 'superadmin', $3, $4, true)`,
+      [username, passwordHash, nombre, email]
+    );
+
+    console.log("\n✅ SuperAdmin creado exitosamente:");
+    console.log(`   Username: ${username}`);
+    console.log(`   Name: ${nombre}`);
+    console.log(`   Email: ${email}`);
+    console.log(`   Password: ${password}`);
+    console.log("\n⚠️  GUARDA ESTAS CREDENCIALES EN UN LUGAR SEGURO");
+
+    rl.close();
+    await pool.end();
+
+  } catch (err) {
+    console.error(`❌ Error: ${err.message}`);
+    rl.close();
+    await pool.end();
+    process.exit(1);
+  }
+}
+
+createSuperAdmin();

@@ -280,5 +280,5 @@ La migración está **100% completa**. El código está listo para ser desplegad
 
 ---
 
-*Migración completada el: 2025*
-*Stack final: Node.js + Express + PostgreSQL + Vercel*
+*Migración completada: Abril 2026*
+*Stack final: Node.js + Express + PostgreSQL (pg) + Vercel*
