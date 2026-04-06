@@ -27,6 +27,8 @@ export default function HomePage() {
     global_courts: [],
     payment_methods: [],
     default_tournament_type: "",
+    default_clasifican_de_zona_3: 2,
+    default_clasifican_de_zona_4: 3,
     min_pairs: 6,
     max_pairs: 24,
   });
@@ -72,13 +74,26 @@ export default function HomePage() {
         global_courts: globalCourts,
         payment_methods: paymentMethods,
         default_tournament_type: defaultTournamentType,
+        default_clasifican_de_zona_3: Number(options.default_clasifican_de_zona_3 || 2),
+        default_clasifican_de_zona_4: Number(options.default_clasifican_de_zona_4 || 3),
         min_pairs: Number(options.min_pairs || 6),
         max_pairs: Number(options.max_pairs || 24),
       });
 
+      const defaultClasifica3 = Number(options.default_clasifican_de_zona_3 || 2);
+      const defaultClasifica4 = Number(options.default_clasifican_de_zona_4 || 3);
+
       setForm((prev) => ({
         ...prev,
         tipo_torneo: prev.tipo_torneo || defaultTournamentType,
+        clasifican_de_zona_3:
+          prev.clasifican_de_zona_3 === INITIAL_FORM.clasifican_de_zona_3
+            ? defaultClasifica3
+            : prev.clasifican_de_zona_3,
+        clasifican_de_zona_4:
+          prev.clasifican_de_zona_4 === INITIAL_FORM.clasifican_de_zona_4
+            ? defaultClasifica4
+            : prev.clasifican_de_zona_4,
         global_court_ids: prev.global_court_ids.length ? prev.global_court_ids : globalCourts.map((court) => Number(court.id)),
         enabled_payment_method_ids: prev.enabled_payment_method_ids.length
           ? prev.enabled_payment_method_ids

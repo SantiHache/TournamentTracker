@@ -55,6 +55,17 @@ const minTournamentPairs = Number.isFinite(envMinTournamentPairs)
 const maxTournamentPairs = Number.isFinite(envMaxTournamentPairs)
   ? Math.max(minTournamentPairs, Math.floor(envMaxTournamentPairs))
   : Math.max(minTournamentPairs, 24);
+
+function parseIntegerEnv(name, fallback, min, max) {
+  const rawValue = process.env[name];
+  const parsed = Number(rawValue);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.min(max, Math.max(min, Math.floor(parsed)));
+}
+
+const defaultClasificanDeZona3 = parseIntegerEnv("DEFAULT_CLASIFICAN_ZONA_3", 2, 1, 3);
+const defaultClasificanDeZona4 = parseIntegerEnv("DEFAULT_CLASIFICAN_ZONA_4", 3, 1, 4);
+
 const rawInstallationMode = String(process.env.INSTALLATION_MODE || "club").trim().toLowerCase();
 const installationMode = validInstallationModes.has(rawInstallationMode)
   ? rawInstallationMode
@@ -76,6 +87,8 @@ const config = {
   allowedTournamentTypes,
   defaultTournamentType: resolvedDefaultTournamentType,
   tournamentProfiles,
+  defaultClasificanDeZona3,
+  defaultClasificanDeZona4,
   installationMode,
   circuitEnabled,
   isClubMode: installationMode === "club",
