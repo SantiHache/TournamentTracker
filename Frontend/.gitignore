@@ -1,1 +1,17 @@
 .vercel
+node_modules/
+dist/
+.env.local
+.env.*.local
+*.log
+.vercel
+*.db
+*.db-shm
+*.db-wal
+data/*.db
+data/*.db-shm
+data/*.db-wal
+node_modules
+.env
+.env.local
+.DS_Store
