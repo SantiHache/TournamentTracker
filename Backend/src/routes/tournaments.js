@@ -5,7 +5,7 @@ const { config } = require("../config");
 const { validate } = require("../middleware/validate");
 const { logAudit } = require("../services/audit");
 const { createGroups, assignPairsAndGenerateZones, createBracketTree, syncBracketFirstRound } = require("../services/tournamentSetup");
-const { recalcGroupStandings, getGroupStandingsSnapshot } = require("../logic/standings");
+const { recalcGroupStandings, getGroupStandingsSnapshot, sortStandingsByPerformance, computeTiePairs } = require("../logic/standings");
 const { normalizeEstadoForTransactions } = require("../logic/payments");
 const { buildWOSets } = require("../logic/wo");
 const { queueMatch, removeFromQueue, reorderQueue } = require("../logic/courts");
@@ -1106,31 +1106,72 @@ router.put("/:id/pagos/transacciones/:txId", async (req, res) => {
 
 router.get("/:id/zonas", async (req, res) => {
   const tournamentId = Number(req.params.id);
-  const groups = (await db.query(
+
+  // Traer grupos, partidos, standings y cola en 4 queries en paralelo (sin N+1)
+  const groupIds = (await db.query(
     "SELECT * FROM groups WHERE tournament_id = $1 ORDER BY name ASC",
     [tournamentId]
   )).rows;
 
-  const result = [];
-  for (const group of groups) {
-    const matches = (await db.query(
-      `SELECT m.*,
-        (SELECT cq.court_id FROM court_queue cq WHERE cq.match_id = m.id LIMIT 1) AS queue_court_id,
-        (SELECT cq.orden FROM court_queue cq WHERE cq.match_id = m.id LIMIT 1) AS queue_orden
-       FROM matches m
-       WHERE m.group_id = $1
-       ORDER BY m.id ASC`,
-      [group.id]
-    )).rows;
+  if (!groupIds.length) return res.json([]);
 
-    const calc = await getGroupStandingsSnapshot(group.id);
-    result.push({
-      group,
-      matches,
-      standings: calc.standings,
-      has_tie_warning: calc.ties.length > 0,
+  const ids = groupIds.map((g) => g.id);
+  const idPlaceholders = ids.map((_, i) => `$${i + 1}`).join(",");
+
+  const [matchRows, standingRows, queueRows] = await Promise.all([
+    db.query(
+      `SELECT m.* FROM matches m WHERE m.group_id IN (${idPlaceholders}) ORDER BY m.id ASC`,
+      ids
+    ),
+    db.query(
+      `SELECT * FROM group_standings
+       WHERE group_id IN (${idPlaceholders})
+       ORDER BY CASE WHEN position IS NULL THEN 999 ELSE position END ASC, id ASC`,
+      ids
+    ),
+    db.query(
+      `SELECT match_id, court_id, orden FROM court_queue
+       WHERE match_id IN (
+         SELECT id FROM matches WHERE group_id IN (${idPlaceholders})
+       )`,
+      ids
+    ),
+  ]);
+
+  // Indexar por group_id / match_id en JS (sin queries adicionales)
+  const queueByMatchId = new Map();
+  for (const row of queueRows.rows) {
+    queueByMatchId.set(row.match_id, row);
+  }
+
+  const matchesByGroupId = new Map();
+  for (const match of matchRows.rows) {
+    if (!matchesByGroupId.has(match.group_id)) matchesByGroupId.set(match.group_id, []);
+    const q = queueByMatchId.get(match.id);
+    matchesByGroupId.get(match.group_id).push({
+      ...match,
+      queue_court_id: q?.court_id ?? null,
+      queue_orden: q?.orden ?? null,
     });
   }
+
+  const standingsByGroupId = new Map();
+  for (const row of standingRows.rows) {
+    if (!standingsByGroupId.has(row.group_id)) standingsByGroupId.set(row.group_id, []);
+    standingsByGroupId.get(row.group_id).push(row);
+  }
+
+  const result = groupIds.map((group) => {
+    const standings = standingsByGroupId.get(group.id) || [];
+    const ordered = sortStandingsByPerformance(standings);
+    const ties = computeTiePairs(group.size, ordered);
+    return {
+      group,
+      matches: matchesByGroupId.get(group.id) || [],
+      standings,
+      has_tie_warning: ties.length > 0,
+    };
+  });
 
   res.json(result);
 });

@@ -173,4 +173,4 @@ async function recalcGroupStandings(groupId, client) {
   return { ties, standings: finalStandings };
 }
 
-module.exports = { recalcGroupStandings, getGroupStandingsSnapshot };
+module.exports = { recalcGroupStandings, getGroupStandingsSnapshot, sortStandingsByPerformance, computeTiePairs };
