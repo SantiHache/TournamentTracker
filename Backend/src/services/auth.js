@@ -11,7 +11,7 @@ function signToken(user) {
       playerId: user.player_id || null,
     },
     config.jwtSecret,
-    { expiresIn: "8h" }
+    { expiresIn: "1h" }
   );
 }
 

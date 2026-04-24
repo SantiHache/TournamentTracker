@@ -1,4 +1,5 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import AppShell from "./components/AppShell";
 import TournamentScopeLayout from "./components/TournamentScopeLayout";
 import LoginPage from "./pages/LoginPage";
@@ -16,6 +17,7 @@ import SuperAdminJugadoresPage from "./pages/SuperAdminJugadoresPage";
 import SuperAdminTorneosPage from "./pages/SuperAdminTorneosPage";
 import SuperAdminAuditoriaPage from "./pages/SuperAdminAuditoriaPage";
 import { useAuthStore } from "./store/authStore";
+import PageSpinner from "./components/PageSpinner";
 
 function Protected({ children }) {
   const token = useAuthStore((s) => s.token);
@@ -30,6 +32,26 @@ function RequireSuperAdmin({ children }) {
 }
 
 export default function App() {
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const checkAuth = useAuthStore((s) => s.checkAuth);
+  const token = useAuthStore((s) => s.token);
+
+  useEffect(() => {
+    // Verificar la sesión al iniciar la app
+    async function verifySession() {
+      if (token) {
+        await checkAuth();
+      }
+      setIsCheckingAuth(false);
+    }
+    verifySession();
+  }, []);
+
+  // Mostrar spinner mientras verifica la sesión
+  if (isCheckingAuth) {
+    return <PageSpinner />;
+  }
+
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />

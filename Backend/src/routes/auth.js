@@ -163,6 +163,20 @@ router.post(
   }
 );
 
+// Endpoint para verificar si el token es válido
+router.get("/verify", requireAuth, (req, res) => {
+  res.json({ 
+    ok: true,
+    user: {
+      id: req.user.id,
+      username: req.user.username,
+      role: req.user.role,
+      nombre: req.user.nombre,
+      playerId: req.user.player_id,
+    }
+  });
+});
+
 router.post("/logout", requireAuth, async (req, res) => {
   await db.query(
     "UPDATE users SET session_version = session_version + 1 WHERE id = $1",

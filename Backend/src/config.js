@@ -73,6 +73,15 @@ const installationMode = validInstallationModes.has(rawInstallationMode)
 const circuitEnabled =
   installationMode === "circuit" && String(process.env.CIRCUIT_ENABLED || "false") === "true";
 
+const branding = {
+  productName: String(process.env.BRANDING_PRODUCT_NAME || "Tournament Tracker").trim(),
+  clubName: String(process.env.BRANDING_CLUB_NAME || "La Fabrica").trim(),
+  footerTagline: String(process.env.BRANDING_FOOTER_TAGLINE || "By SimpleLine").trim(),
+  tournamentLogoFile: String(process.env.BRANDING_TOURNAMENT_LOGO_FILE || "").trim(),
+  clubLogoFile: String(process.env.BRANDING_CLUB_LOGO_FILE || "").trim(),
+  developerLogoFile: String(process.env.BRANDING_DEVELOPER_LOGO_FILE || "").trim(),
+};
+
 const config = {
   port: Number(process.env.PORT || 4000),
   jwtSecret: process.env.JWT_SECRET || "replace_this_secret",
@@ -93,6 +102,7 @@ const config = {
   circuitEnabled,
   isClubMode: installationMode === "club",
   isCircuitMode: circuitEnabled,
+  branding,
 };
 
 module.exports = { config };

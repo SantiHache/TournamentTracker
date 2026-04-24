@@ -15,7 +15,8 @@ export default function TournamentScopeLayout() {
   const { id } = useParams();
   const tournamentVersion = useTournamentStore((s) => s.tournamentVersion);
   const bumpTournamentVersion = useTournamentStore((s) => s.bumpTournamentVersion);
-  const [torneo, setTorneo] = useState(null);
+  const fetchSharedData = useTournamentStore((s) => s.fetchSharedData);
+  const torneo = useTournamentStore((s) => s.torneo);
   const [startModal, setStartModal] = useState({
     open: false,
     message: "",
@@ -24,8 +25,8 @@ export default function TournamentScopeLayout() {
   const [toasts, setToasts] = useState([]);
 
   useEffect(() => {
-    api.get(`/torneos/${id}`).then(({ data }) => setTorneo(data)).catch(() => setTorneo(null));
-  }, [id, tournamentVersion]);
+    fetchSharedData(id);
+  }, [id, tournamentVersion, fetchSharedData]);
 
   const pushToast = (type, message) => {
     const toastId = Date.now() + Math.random();

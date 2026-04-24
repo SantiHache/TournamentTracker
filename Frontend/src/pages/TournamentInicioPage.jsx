@@ -6,8 +6,8 @@ import { useTournamentStore } from "../store/tournamentStore";
 export default function TournamentInicioPage() {
   const { id } = useParams();
   const tournamentVersion = useTournamentStore((s) => s.tournamentVersion);
-  const [torneo, setTorneo] = useState(null);
-  const [parejas, setParejas] = useState([]);
+  const torneo = useTournamentStore((s) => s.torneo);
+  const parejas = useTournamentStore((s) => s.parejas);
   const [partidos, setPartidos] = useState([]);
   const [canchasEstado, setCanchasEstado] = useState([]);
   const [pagos, setPagos] = useState([]);
@@ -17,16 +17,12 @@ export default function TournamentInicioPage() {
   const [elapsedTimes, setElapsedTimes] = useState({});
 
   const load = async () => {
-    const [t, p, pd, ce, pp, pag] = await Promise.all([
-      api.get(`/torneos/${id}`),
-      api.get(`/torneos/${id}/parejas`),
+    const [pd, ce, pp, pag] = await Promise.all([
       api.get(`/torneos/${id}/partidos`),
       api.get(`/torneos/${id}/canchas/estado`),
       api.get(`/torneos/${id}/partidos/pendientes`),
       api.get(`/torneos/${id}/pagos`),
     ]);
-    setTorneo(t.data);
-    setParejas(p.data || []);
     setPartidos(pd.data || []);
     setCanchasEstado(ce.data || []);
     setPendientes(pp.data || { sinCancha: [], conCancha: [] });
@@ -208,10 +204,10 @@ export default function TournamentInicioPage() {
 
       {/* Estadísticas principales */}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Card: Parejas inscritas */}
+        {/* Card: Parejas inscriptas */}
         <div className="card p-6 bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-semibold text-blue-700 uppercase tracking-wide">Parejas inscritas</p>
+            <p className="text-sm font-semibold text-blue-700 uppercase tracking-wide">Parejas inscriptas</p>
             <span className="text-2xl">👥</span>
           </div>
           <p className="text-3xl font-bold text-blue-900">{totalParejas}</p>

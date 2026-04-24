@@ -4,6 +4,33 @@ import api from "../api";
 import { useAuthStore } from "../store/authStore";
 import { useTournamentStore } from "../store/tournamentStore";
 
+const DEFAULT_BRANDING = {
+  productName: "Tournament Tracker",
+  clubName: "La Fabrica",
+  footerTagline: "By SimpleLine",
+  tournamentLogoFile: "",
+  clubLogoFile: "",
+  developerLogoFile: "",
+};
+
+const brandAssets = import.meta.glob("../../assets/*.{png,jpg,jpeg,svg,webp,avif}", {
+  eager: true,
+  import: "default",
+});
+
+function resolveBrandAsset(fileName, fallbackFileName) {
+  const preferred = String(fileName || "").trim();
+  const fallback = String(fallbackFileName || "").trim();
+  const candidates = [preferred, fallback].filter(Boolean);
+
+  for (const candidate of candidates) {
+    const match = Object.entries(brandAssets).find(([path]) => path.endsWith(`/${candidate}`));
+    if (match) return match[1];
+  }
+
+  return null;
+}
+
 function navClass(isActive, collapsed) {
   return `group flex w-full items-center ${collapsed ? "justify-center" : "justify-start"} gap-3 rounded-lg px-3 py-2 text-sm font-medium transition ${
     isActive
@@ -25,6 +52,7 @@ export default function AppShell() {
   const [appModeLabel, setAppModeLabel] = useState(null);
   const [appVersion, setAppVersion] = useState(null);
   const [installationMode, setInstallationMode] = useState(null);
+  const [branding, setBranding] = useState(DEFAULT_BRANDING);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -51,6 +79,7 @@ export default function AppShell() {
           setAppModeLabel(data?.modeLabel || null);
           setAppVersion(data?.version || null);
           setInstallationMode(data?.installationMode || null);
+          setBranding((prev) => ({ ...prev, ...(data?.branding || {}) }));
         }
       } catch {
         if (!ignore) {
@@ -108,9 +137,18 @@ export default function AppShell() {
 
   const desktopSidebarWidth = sidebarCollapsed ? "lg:w-20" : "lg:w-80";
   const desktopContentOffset = sidebarCollapsed ? "lg:ml-20" : "lg:ml-80";
+  const tournamentLogoSrc = resolveBrandAsset(
+    branding.tournamentLogoFile,
+    DEFAULT_BRANDING.tournamentLogoFile
+  );
+  const clubLogoSrc = resolveBrandAsset(branding.clubLogoFile, DEFAULT_BRANDING.clubLogoFile);
+  const developerLogoSrc = resolveBrandAsset(
+    branding.developerLogoFile,
+    DEFAULT_BRANDING.developerLogoFile
+  );
 
   return (
-    <div className="h-screen overflow-hidden bg-slate-50">
+    <div className="h-screen overflow-hidden bg-[rgb(196_193_198)]">
       {mobileOpen && (
         <button
           type="button"
@@ -332,6 +370,49 @@ export default function AppShell() {
           </div>
 
           <div className="border-t border-slate-100 p-3">
+            {!sidebarCollapsed && (
+              <section className="mb-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+                <div className="space-y-2">
+                  <div className="grid grid-cols-2 gap-2">
+                    {tournamentLogoSrc && (
+                      <div className="flex h-20 items-center justify-center rounded-lg border border-slate-200 bg-white p-2">
+                        <img
+                          src={tournamentLogoSrc}
+                          alt={`${branding.productName} logo`}
+                          className="max-h-full w-full object-contain"
+                        />
+                      </div>
+                    )}
+                    {clubLogoSrc && (
+                      <div className="flex h-20 items-center justify-center rounded-lg border border-slate-200 bg-white p-2">
+                        <img
+                          src={clubLogoSrc}
+                          alt={`${branding.clubName} logo`}
+                          className="max-h-full w-full object-contain"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {developerLogoSrc && (
+                    <div className="flex h-20 items-center justify-center rounded-lg border border-slate-200 bg-white p-2">
+                      <img
+                        src={developerLogoSrc}
+                        alt="SimpleLine logo"
+                        className="max-h-full max-w-[85%] object-contain"
+                      />
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
+
+            {sidebarCollapsed && tournamentLogoSrc && (
+              <div className="mb-3 flex justify-center">
+                <img src={tournamentLogoSrc} alt={`${branding.productName} logo`} className="h-10 w-10 rounded-lg object-contain" />
+              </div>
+            )}
+
             <button
               className={`btn-secondary w-full ${sidebarCollapsed ? "lg:px-0" : ""}`}
               onClick={onLogout}
