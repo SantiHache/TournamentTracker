@@ -64,9 +64,10 @@ function scoreBoxClass(hasValue, editing) {
 export default function TournamentZonasPage() {
   const { id } = useParams();
   const tournamentVersion = useTournamentStore((s) => s.tournamentVersion);
-  const [torneo, setTorneo] = useState(null);
+  const torneo = useTournamentStore((s) => s.torneo);
+  const parejas = useTournamentStore((s) => s.parejas);
+  const refreshTorneo = useTournamentStore((s) => s.refreshTorneo);
   const [zonas, setZonas] = useState([]);
-  const [parejas, setParejas] = useState([]);
   const [canchas, setCanchas] = useState([]);
   const [zoneOrders, setZoneOrders] = useState({});
   const [resultForms, setResultForms] = useState({});
@@ -98,23 +99,13 @@ export default function TournamentZonasPage() {
   };
 
   const loadCore = async () => {
-    const [t, z] = await Promise.all([
-      api.get(`/torneos/${id}`),
-      api.get(`/torneos/${id}/zonas`),
-    ]);
-
-    setTorneo(t.data);
-    applyZonesData(z.data || []);
+    const { data } = await api.get(`/torneos/${id}/zonas`);
+    applyZonesData(data || []);
   };
 
   const loadCatalogs = async () => {
-    const [p, c] = await Promise.all([
-      api.get(`/torneos/${id}/parejas`),
-      api.get(`/torneos/${id}/canchas`),
-    ]);
-
-    setParejas(p.data || []);
-    setCanchas(c.data || []);
+    const { data } = await api.get(`/torneos/${id}/canchas`);
+    setCanchas(data || []);
   };
 
   const loadAll = async () => {
@@ -250,6 +241,7 @@ export default function TournamentZonasPage() {
       await api.put(`/torneos/${id}/zonas/cerrar`, { ordered_by_zone });
       setInfo("Zonas cerradas y cuadro eliminatorio sincronizado");
       await loadCore();
+      await refreshTorneo(id);
     } catch (err) {
       setError(err.response?.data?.error || "No se pudieron cerrar las zonas");
     }

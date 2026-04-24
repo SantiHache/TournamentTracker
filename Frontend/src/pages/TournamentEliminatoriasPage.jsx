@@ -25,8 +25,8 @@ export default function TournamentEliminatoriasPage() {
   const { id } = useParams();
   const user = useAuthStore((s) => s.user);
   const tournamentVersion = useTournamentStore((s) => s.tournamentVersion);
-  const [torneo, setTorneo] = useState(null);
-  const [parejas, setParejas] = useState([]);
+  const torneo = useTournamentStore((s) => s.torneo);
+  const parejas = useTournamentStore((s) => s.parejas);
   const [cuadroData, setCuadroData] = useState({ blocked: false, message: null, matches: [], diagnostics: null });
   const [partidos, setPartidos] = useState([]);
   const [canchasList, setCanchasList] = useState([]);
@@ -50,15 +50,11 @@ export default function TournamentEliminatoriasPage() {
   const [saSaving, setSaSaving] = useState(false);
 
   const load = async () => {
-    const [t, p, c, pd, cl] = await Promise.all([
-      api.get(`/torneos/${id}`),
-      api.get(`/torneos/${id}/parejas`),
+    const [c, pd, cl] = await Promise.all([
       api.get(`/torneos/${id}/cuadro`),
       api.get(`/torneos/${id}/partidos`),
       api.get(`/torneos/${id}/canchas`),
     ]);
-    setTorneo(t.data);
-    setParejas(p.data || []);
     setCuadroData(c.data || { blocked: false, message: null, matches: [], diagnostics: null });
     setPartidos(pd.data || []);
     setCanchasList(cl.data || []);

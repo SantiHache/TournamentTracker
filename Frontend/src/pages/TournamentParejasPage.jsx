@@ -7,8 +7,9 @@ import styles from "./TournamentParejasPage.module.css";
 export default function TournamentParejasPage() {
   const { id } = useParams();
   const tournamentVersion = useTournamentStore((s) => s.tournamentVersion);
-  const [torneo, setTorneo] = useState(null);
-  const [parejas, setParejas] = useState([]);
+  const torneo = useTournamentStore((s) => s.torneo);
+  const parejas = useTournamentStore((s) => s.parejas);
+  const refreshParejas = useTournamentStore((s) => s.refreshParejas);
   const [error, setError] = useState("");
   const [info, setInfo] = useState("");
   const [pairLimits, setPairLimits] = useState({ min: 6, max: 24 });
@@ -33,21 +34,19 @@ export default function TournamentParejasPage() {
   const paymentKey = (pairId, playerNum) => `${pairId}-${playerNum}`;
 
   const load = async () => {
-    const [t, p, mp, pg] = await Promise.all([
-      api.get(`/torneos/${id}`),
-      api.get(`/torneos/${id}/parejas`),
+    const [mp, pg] = await Promise.all([
       api.get(`/torneos/${id}/medios-pago?enabledOnly=1`),
       api.get(`/torneos/${id}/pagos`),
     ]);
     const options = await api.get("/torneos/opciones-creacion");
-    setTorneo(t.data);
-    setParejas(p.data || []);
     setMediosPago(mp.data || []);
     setPagos(pg.data || []);
     setPairLimits({
       min: Number(options.data?.min_pairs || 6),
       max: Number(options.data?.max_pairs || 24),
     });
+    // Sync parejas in shared store so other tabs see changes
+    await refreshParejas(id);
   };
 
   useEffect(() => {

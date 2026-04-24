@@ -151,8 +151,8 @@ app.get("/debug/data-check", async (req, res) => {
 });
 
 app.get("/api/health", (req, res) => res.json({ ok: true }));
-const APP_VERSION = "1.2.4";
-const APP_BUILD_DATE = "2026-04-06";
+const APP_VERSION = "1.3.1";
+const APP_BUILD_DATE = "2026-04-24";
 
 app.get("/api/public/app-config", (req, res) => {
 	res.json({
@@ -161,6 +161,7 @@ app.get("/api/public/app-config", (req, res) => {
 		modeLabel: config.isCircuitMode ? "Circuit Mode" : "Club Mode",
 		version: APP_VERSION,
 		buildDate: APP_BUILD_DATE,
+    branding: config.branding,
 	});
 });
 app.get("/api/jugadores/debug", async (req, res) => {
